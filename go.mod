@@ -4,7 +4,11 @@ go 1.19
 
 require github.com/gin-gonic/gin v1.8.1
 
-
+require (
+	github.com/go-sql-driver/mysql v1.6.0 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
+)
 
 require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
@@ -27,5 +31,7 @@ require (
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/ini.v1 v1.67.0
 	gopkg.in/yaml.v2 v2.4.0 // indirect
+	gorm.io/driver/mysql v1.3.6
 	gorm.io/gorm v1.23.10
+	gorm.io/plugin/dbresolver v1.2.3
 )
