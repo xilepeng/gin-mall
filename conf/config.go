@@ -3,6 +3,7 @@ package conf
 import (
 	"strings"
 
+	"github.com/xilepeng/gin-mall/dao"
 	"gopkg.in/ini.v1"
 )
 
@@ -36,7 +37,7 @@ var (
 
 func Init() {
 	// 本地读取环境变量
-	file, err := ini.Load("./conf/config.ini")
+	file, err := ini.Load("/Users/x/go/src/gin-mall/conf/config.ini")
 	if err != nil {
 		panic(err)
 	}
