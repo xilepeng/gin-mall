@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/xilepeng/gin-mall/conf"
+	"github.com/xilepeng/gin-mall/routes"
 )
 
 func main() {
-	r := gin.Default()
 	conf.Init()
-	r.Run()
+	r := routes.NewRouter()
+
+	r.Run(conf.HttpPort)
 }

@@ -67,6 +67,13 @@ func (service UserService) Register(ctx context.Context) serializer.Response {
 	}
 
 	// 创建用户
-	
+	err = userDao.CreateUser(user)
+	if err != nil {
+		code = e.Error
+	}
+	return serializer.Response{
+		Status: code,
+		Msg:    e.GetMsg(code),
+	}
 
 }
