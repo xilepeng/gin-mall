@@ -20,7 +20,7 @@ type UserService struct {
 func (service UserService) Register(ctx context.Context) serializer.Response {
 	var user model.User
 	code := e.Success
-	if service.Key == "" || len(service.Key) != 16 {
+	if service.Key == "" || len(service.Key) < 8 {
 		code = e.Error
 		return serializer.Response{
 			Status: code,
@@ -49,12 +49,14 @@ func (service UserService) Register(ctx context.Context) serializer.Response {
 	}
 
 	user = model.User{
-		UserName: service.UserName,
-		NickName: service.NickName,
-		Email:    user.Email,
-		Status:   model.Active,
-		Avatar:   "avatar.png",
-		Money:    utils.Encrypt.AesEncoding("10000"), // 初始金额的加密
+
+		UserName:       service.UserName,
+		Email:          user.Email,
+		PasswordDigest: "",
+		NickName:       service.NickName,
+		Status:         model.Active,
+		Avatar:         "avatar.png",
+		Money:          utils.Encrypt.AesEncoding("10000"),
 	}
 
 	// 密码加密
