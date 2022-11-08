@@ -3,7 +3,7 @@ package conf
 import (
 	"strings"
 
-	"github.com/xilepeng/gin-mall/dao"
+	"gin-mall/dao"
 	"gopkg.in/ini.v1"
 )
 

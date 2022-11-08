@@ -3,7 +3,7 @@ package dao
 import (
 	"context"
 
-	"github.com/xilepeng/gin-mall/model"
+	"gin-mall/model"
 	"gorm.io/gorm"
 )
 

@@ -3,7 +3,7 @@ package dao
 import (
 	"fmt"
 
-	"github.com/xilepeng/gin-mall/model"
+	"gin-mall/model"
 )
 
 func migration() {

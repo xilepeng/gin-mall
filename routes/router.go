@@ -3,9 +3,9 @@ package routes
 import (
 	"net/http"
 
+	api "gin-mall/api/v1"
+	"gin-mall/middleware"
 	"github.com/gin-gonic/gin"
-	api "github.com/xilepeng/gin-mall/api/v1"
-	"github.com/xilepeng/gin-mall/middleware"
 )
 
 func NewRouter() *gin.Engine {
@@ -17,7 +17,7 @@ func NewRouter() *gin.Engine {
 
 	v1 := r.Group("api/v1")
 	{
-		v1.GET("ping", func(c *gin.Context) { c.JSON(200, "success") })
+		//v1.GET("ping", func(c *gin.Context) { c.JSON(200, "success") })
 		// 用户操作
 		v1.POST("user/register", api.UserRegister)
 		v1.POST("user/login", api.UserLogin)

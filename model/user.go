@@ -12,7 +12,7 @@ type User struct {
 	PasswordDigest string
 	NickName       string
 	Status         string
-	Avatar         string
+	Avatar         string `gorm:"size:1000"`
 	Money          string
 }
 
@@ -35,4 +35,10 @@ func (user *User) SetPassword(password string) error {
 func (user *User) CheckPassword(password string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(user.PasswordDigest), []byte(password))
 	return err == nil
+}
+
+// AvatarUrl 封面地址
+func (user *User) AvatarURL() string {
+	signedGetURL := user.Avatar
+	return signedGetURL
 }
