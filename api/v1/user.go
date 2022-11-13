@@ -1,6 +1,7 @@
 package v1
 
 import (
+	util "gin-mall/pkg/utils"
 	"net/http"
 
 	"gin-mall/service"
@@ -32,5 +33,17 @@ func UserLogin(c *gin.Context) {
 		c.JSON(http.StatusOK, res)
 	} else {
 		c.JSON(http.StatusBadRequest, err)
+	}
+}
+
+func UserUpdate(c *gin.Context) {
+	var userUpdateService service.UserService
+	claims, _ := util.ParseToken(c.GetHeader("Authorization"))
+	if err := c.ShouldBind(&userUpdateService); err == nil {
+		res := userUpdateService.Update(c.Request.Context(), claims.ID)
+		c.JSON(200, res)
+	} else {
+		c.JSON(400, ErrorResponse(err))
+		util.LogrusObj.Infoln(err)
 	}
 }

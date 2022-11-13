@@ -70,7 +70,8 @@ func (service UserService) Register(ctx context.Context) serializer.Response {
 			Msg:    e.GetMsg(code),
 		}
 	}
-	user.Avatar = "http://q1.qlogo.cn/g?b=qq&nk=294350394&s=640"
+	user.Avatar = "http://127.0.0.1:3000/static/imgs/avatar/avatar.png"
+
 	//创建用户
 	err = userDao.CreateUser(user)
 	if err != nil {
@@ -87,7 +88,7 @@ func (service UserService) Register(ctx context.Context) serializer.Response {
 	}
 }
 
-// Login 用户登陆函数
+// Login 用户登录
 func (service UserService) Login(ctx context.Context) serializer.Response {
 	code := e.SUCCESS
 	userDao := dao.NewUserDao(ctx)
@@ -119,6 +120,35 @@ func (service UserService) Login(ctx context.Context) serializer.Response {
 	return serializer.Response{
 		Status: code,
 		Data:   serializer.TokenData{User: serializer.BuildUser(user), Token: token},
+		Msg:    e.GetMsg(code),
+	}
+}
+
+// Update 用户修改信息
+func (service UserService) Update(ctx context.Context, uId uint) serializer.Response {
+	var err error
+	code := e.SUCCESS
+	//找到用户
+	userDao := dao.NewUserDao(ctx)
+	user, err := userDao.GetUserById(uId)
+	if service.NickName != "" {
+		user.NickName = service.NickName
+	}
+
+	err = userDao.UpdateUserById(uId, user)
+	if err != nil {
+		logging.Info(err)
+		code = e.ErrorDatabase
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Error:  err.Error(),
+		}
+	}
+
+	return serializer.Response{
+		Status: code,
+		Data:   serializer.BuildUser(user),
 		Msg:    e.GetMsg(code),
 	}
 }
