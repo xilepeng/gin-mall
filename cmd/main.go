@@ -1,13 +1,20 @@
 package main
 
 import (
-	"gin-mall/conf"
-	"gin-mall/routes"
+	"fmt"
+
+	conf "github.com/xilepeng/gin-mall/config"
+	"github.com/xilepeng/gin-mall/routes"
 )
 
 func main() {
-	conf.Init()
+	loading() // 加载配置
 	r := routes.NewRouter()
+	_ = r.Run(conf.Config.System.HttpPort)
+	fmt.Println("启动配成功...")
+}
 
-	_ = r.Run(conf.HttpPort)
+func loading() {
+	conf.InitConfig()
+
 }

@@ -1,6 +1,6 @@
 package serializer
 
-import "gin-mall/model"
+import "github.com/xilepeng/gin-mall/model"
 
 type User struct {
 	ID       uint   `json:"id"`

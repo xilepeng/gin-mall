@@ -3,34 +3,27 @@ package v1
 import (
 	"encoding/json"
 	"fmt"
-	"gin-mall/conf"
-	"gin-mall/serializer"
+
+	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+
+	conf "github.com/xilepeng/gin-mall/config"
+	"github.com/xilepeng/gin-mall/pkg/e"
+	"github.com/xilepeng/gin-mall/pkg/utils/ctl"
 )
 
-func ErrorResponse(err error) serializer.Response {
+func ErrorResponse(ctx *gin.Context, err error) *ctl.TrackedErrorResponse {
 	if ve, ok := err.(validator.ValidationErrors); ok {
-		for _, e := range ve {
-			field := conf.T(fmt.Sprintf("Field.%s", e.Field))
-			tag := conf.T(fmt.Sprintf("Tag.Valid.%s", e.Tag))
-			return serializer.Response{
-				Status: 400,
-				Msg:    fmt.Sprintf("%s%s", field, tag),
-				Error:  fmt.Sprint(err),
-			}
-		}
-	}
-	if _, ok := err.(*json.UnmarshalTypeError); ok {
-		return serializer.Response{
-			Status: 400,
-			Msg:    "JSON类型不匹配",
-			Error:  fmt.Sprint(err),
+		for _, fieldError := range ve {
+			field := conf.T(fmt.Sprintf("Field.%s", fieldError.Field))
+			tag := conf.T(fmt.Sprintf("Tag.Valid.%s", fieldError.Tag))
+			return ctl.RespError(ctx, err, fmt.Sprintf("%s%s", field, tag))
 		}
 	}
 
-	return serializer.Response{
-		Status: 400,
-		Msg:    "参数错误",
-		Error:  fmt.Sprint(err),
+	if _, ok := err.(*json.UnmarshalTypeError); ok {
+		return ctl.RespError(ctx, err, "JSON类型不匹配")
 	}
+
+	return ctl.RespError(ctx, err, err.Error(), e.ERROR)
 }

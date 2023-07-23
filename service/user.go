@@ -2,13 +2,38 @@ package service
 
 import (
 	"context"
-	"gin-mall/dao"
-	"gin-mall/model"
-	"gin-mall/pkg/e"
-	util "gin-mall/pkg/utils"
-	"gin-mall/serializer"
-	logging "github.com/sirupsen/logrus"
+	"sync"
+
+	"github.com/xilepeng/gin-mall/pkg/utils/log"
+	"github.com/xilepeng/gin-mall/repository/dao"
+	"github.com/xilepeng/gin-mall/types"
 )
+
+var UserSrvIns *UserSrv
+var UserSrvOnce sync.Once
+
+type UserSrv struct{}
+
+func GetUserSrv() *UserSrv {
+	UserSrvOnce.Do(func() {
+		UserSrvIns = &UserSrv{}
+	})
+	return UserSrvIns
+}
+
+func (s *UserSrv) UserRegister(ctx context.Context, req *types.UserRegisterReq) (resp interface{}, err error) {
+	UserDao := dao.NewUserDao(ctx)
+	_, exist, err := UserDao.ExistOrNotByUserName(req.UserName)
+	if err != nil {
+		log.LogrusObj.Error(err)
+	}
+
+}
+
+// ----------------后面待调试----------------------------
+
+/*
+
 
 // UserService 管理用户服务
 type UserService struct {
@@ -27,6 +52,8 @@ type SendEmailService struct {
 
 type ValidEmailService struct {
 }
+
+
 
 func (service UserService) Register(ctx context.Context) serializer.Response {
 	code := e.SUCCESS
@@ -152,3 +179,7 @@ func (service UserService) Update(ctx context.Context, uId uint) serializer.Resp
 		Msg:    e.GetMsg(code),
 	}
 }
+
+
+
+*/

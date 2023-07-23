@@ -3,7 +3,8 @@ package dao
 import (
 	"context"
 
-	"gin-mall/model"
+	"github.com/xilepeng/gin-mall/model"
+
 	"gorm.io/gorm"
 )
 
@@ -21,22 +22,6 @@ func NewUserDaoByDB(db *gorm.DB) *UserDao {
 	return &UserDao{db}
 }
 
-// 根据 ExistOrNotByUserName 判断是否存在该名字
-// func (dao *UserDao) ExistOrNotByUserName(userName string) (user *model.User, exist bool, err error) {
-// 	var count int64
-
-// 	err = dao.DB.Model(&model.User{}).Where("user_name=?", userName).Count(&count).Error
-// 	if count == 0 {
-// 		return nil, false, err
-// 	}
-// 	// err = dao.DB.Model(&model.User{}).Where("user_name=?", userName).
-// 	// 	First(&user).Error
-// 	// if err != nil {
-// 	// 	return nil, false, err
-// 	// }
-// 	return user, true, nil
-// }
-
 // ExistOrNotByUserName 根据username判断是否存在该名字
 func (dao *UserDao) ExistOrNotByUserName(userName string) (user *model.User, exist bool, err error) {
 	var count int64
@@ -53,12 +38,6 @@ func (dao *UserDao) ExistOrNotByUserName(userName string) (user *model.User, exi
 	return user, true, nil
 }
 
-// CreateUser 创建用户
-func (dao *UserDao) CreateUser(user *model.User) (err error) {
-	err = dao.DB.Model(&model.User{}).Create(&user).Error
-	return
-}
-
 // GetUserById 根据 id 获取用户
 func (dao *UserDao) GetUserById(uId uint) (user *model.User, err error) {
 	err = dao.DB.Model(&model.User{}).Where("id=?", uId).
@@ -70,4 +49,9 @@ func (dao *UserDao) GetUserById(uId uint) (user *model.User, err error) {
 func (dao *UserDao) UpdateUserById(uId uint, user *model.User) error {
 	return dao.DB.Model(&model.User{}).Where("id=?", uId).
 		Updates(&user).Error
+}
+
+// CreateUser 创建用户
+func (dao *UserDao) CreateUser(user *model.User) (err error) {
+	return dao.DB.Model(&model.User{}).Create(&user).Error
 }
