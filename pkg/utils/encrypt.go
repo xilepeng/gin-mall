@@ -1,4 +1,4 @@
-package utils
+package util
 
 import (
 	"bytes"
@@ -9,7 +9,7 @@ import (
 
 var Encrypt *Encryption
 
-// AES 对称加密
+// AES 加密算法
 type Encryption struct {
 	key string
 }

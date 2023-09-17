@@ -14,17 +14,12 @@ func NewRouter() *gin.Engine {
 	r.StaticFS("/static", http.Dir("./static"))
 	v1 := r.Group("api/v1")
 	{
-		v1.GET("ping", func(c *gin.Context) { c.JSON(200, "success") })
-		// 用户操作
-		v1.POST("user/register", api.UserRegisterHandler())
-		v1.POST("user/login", api.UserLoginHandler())
+		v1.GET("ping", func(c *gin.Context) {
+			c.JSON(200, "success")
+		})
 
-		authed := v1.Group("/") // 需要登录保护
-		authed.Use(middleware.JWT())
-		{
-			// 用户操作
-			authed.PUT("user", api.UserUpdateHandler()) // 测试
-		}
+		// 用户操作
+		v1.POST("user/register", api.UserRegister)
 	}
 	return r
 }

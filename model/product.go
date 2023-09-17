@@ -13,7 +13,7 @@ type Product struct {
 	DiscountPrice string // 折后价
 	OnSale        bool   `gorm:"default:false"`
 	Num           int
-	BossId        int
+	BossId        uint
 	BossName      string
 	BossAvatar    string
 }

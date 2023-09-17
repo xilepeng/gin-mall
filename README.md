@@ -61,3 +61,58 @@ ALTER USER 'root'@'%' IDENTIFIED BY '密码' PASSWORD EXPIRE NEVER;
 ALTER USER 'root'@'localhost' IDENTIFIED BY '密码';
 
 ```
+
+
+```shell 
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mall_db            |
+| mall_db_test       |
+| mysql              |
+| performance_schema |
+| sys                |
+| todolist           |
++--------------------+
+7 rows in set (0.22 sec)
+
+mysql> use mall_db;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++-------------------+
+| Tables_in_mall_db |
++-------------------+
+| address           |
+| admin             |
+| carousel          |
+| cart              |
+| category          |
+| favorite          |
+| notice            |
+| order             |
+| product           |
+| product_img       |
+| relation          |
+| skill_product     |
+| skill_product2_mq |
+| user              |
++-------------------+
+14 rows in set (0.00 sec)
+
+mysql> select * from user;
++----+---------------------+---------------------+------------+-----------+-------+--------------------------------------------------------------+-----------+--------+-----------------------------------------------------+--------------------------+
+| id | created_at          | updated_at          | deleted_at | user_name | email | password_digest                                              | nick_name | status | avatar                                              | money                    |
++----+---------------------+---------------------+------------+-----------+-------+--------------------------------------------------------------+-----------+--------+-----------------------------------------------------+--------------------------+
+|  1 | 2023-06-19 07:12:55 | 2023-06-19 07:12:55 | NULL       | xi        |       | $2a$12$bSkd66FwPau0vEP0141ZruOh9p9rkjMIjgZ2ncCp21er7ZmSe./vC | ??        | active | http://127.0.0.1:3000/static/imgs/avatar/avatar.png | Zt3uB50jiObAwOoJ/kLpaQ== |
+|  2 | 2023-07-20 03:21:01 | 2023-07-20 03:21:01 | NULL       | x         |       | $2a$12$3a76sUYwl8TbdILrCd8sku22567S8D6.J2/.Xo5prf39GVrLp58.i | ??        | active | http://127.0.0.1:3000/static/imgs/avatar/avatar.png | Zt3uB50jiObAwOoJ/kLpaQ== |
+|  3 | 2023-07-20 09:11:23 | 2023-07-20 09:11:23 | NULL       | test      |       | $2a$12$u9CYbv7rYD4BnDjdc7bRKeBVui21quziudVGlTUTL5soMvn9rXMc. | ??        | active | http://127.0.0.1:3000/static/imgs/avatar/avatar.png | Zt3uB50jiObAwOoJ/kLpaQ== |
+|  4 | 2023-07-28 07:04:48 | 2023-07-28 07:04:48 | NULL       | ??        |       | $2a$12$IeLjHH1sQ1D5kDBHE6622uHLXKbfXSdX4Pro3BKHqJ7PG8m/lddFm | ??        | active | avatar.JPG                                          | wVlreio71PEArDlotVjrJw== |
+|  5 | 2023-08-13 07:10:05 | 2023-08-13 07:10:05 | NULL       | test1     |       | $2a$12$NrV9rB1BwdeskRx0GFyLN..3s86GTzVeCchxXaREwQBBxUclPKWuq | ??        | active | avatar.JPG                                          | wVlreio71PEArDlotVjrJw== |
++----+---------------------+---------------------+------------+-----------+-------+--------------------------------------------------------------+-----------+--------+-----------------------------------------------------+--------------------------+
+5 rows in set (0.01 sec)
+```
