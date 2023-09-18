@@ -14,7 +14,7 @@ type UserService struct {
 	NickName string `json:"nick_name" form:"nick_name"`
 	UserName string `json:"user_name" form:"user_name"`
 	Password string `json:"password" form:"password"`
-	Key      string `json:"key" form:"key"`
+	Key      string `json:"key" form:"key"` // 秘钥：现阶段前端验证
 }
 
 func (service UserService) Register(ctx context.Context) serializer.Response {
@@ -56,11 +56,12 @@ func (service UserService) Register(ctx context.Context) serializer.Response {
 	// 密码加密
 	if err = user.SetPassword(service.Password); err != nil {
 		code = e.ErrorFailEncryption
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+		}
 	}
-	return serializer.Response{
-		Status: code,
-		Msg:    e.GetMsg(code),
-	}
+
 	// 创建用户
 	err = userDao.CreateUser(&user)
 	if err != nil {
@@ -70,4 +71,5 @@ func (service UserService) Register(ctx context.Context) serializer.Response {
 		Status: code,
 		Msg:    e.GetMsg(code),
 	}
+
 }

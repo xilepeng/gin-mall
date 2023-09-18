@@ -22,7 +22,7 @@ func NewEncryption() *Encryption {
 	return &Encryption{}
 }
 
-// 填充密码长度
+// PadPwd 填充密码长度
 func PadPwd(srcByte []byte, blockSize int) []byte {
 	padNum := blockSize - len(srcByte)%blockSize
 	ret := bytes.Repeat([]byte{byte(padNum)}, padNum)
@@ -30,7 +30,7 @@ func PadPwd(srcByte []byte, blockSize int) []byte {
 	return srcByte
 }
 
-// 加密
+// AesEncoding 加密
 func (k *Encryption) AesEncoding(src string) string {
 	srcByte := []byte(src)
 	block, err := aes.NewCipher([]byte(k.key))
@@ -62,7 +62,7 @@ func UnPadPwd(dst []byte) ([]byte, error) {
 	return str, nil
 }
 
-// 解密
+// AesDecoding 解密
 func (k *Encryption) AesDecoding(pwd string) string {
 	pwdByte := []byte(pwd)
 	pwdByte, err := base64.StdEncoding.DecodeString(pwd)
