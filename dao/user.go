@@ -33,6 +33,7 @@ func (dao *UserDao) ExistOrNotByUserName(userName string) (user *model.User, exi
 	return user, true, nil
 }
 
+// CreateUser 创建用户
 func (dao *UserDao) CreateUser(user *model.User) error {
 	return dao.DB.Model(&model.User{}).Create(&user).Error
 }
