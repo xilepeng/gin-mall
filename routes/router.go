@@ -20,6 +20,15 @@ func NewRouter() *gin.Engine {
 
 		// 用户操作
 		v1.POST("user/register", api.UserRegister)
+		v1.POST("user/login", api.UserLogin)
+
+		// 需要登录保护
+		authed := v1.Group("/")
+		{
+			// 用户操作
+			v1.PUT("user/update", api.UserUpdate)
+
+		}
 	}
 	return r
 }
