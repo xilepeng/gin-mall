@@ -24,9 +24,11 @@ func NewRouter() *gin.Engine {
 
 		// 需要登录保护
 		authed := v1.Group("/")
+		authed.Use(middleware.JWT())
 		{
 			// 用户操作
-			v1.PUT("user/update", api.UserUpdate)
+			authed.PUT("user/update", api.UserUpdate)
+			authed.POST("user/updateAvatar", api.UpdateAvatar)
 
 		}
 	}

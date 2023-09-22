@@ -30,9 +30,22 @@ func UserLogin(c *gin.Context) {
 
 func UserUpdate(c *gin.Context) {
 	var userUpdate service.UserService
-	claims, _ := util.ParseToken("Authorization")
+	claims, _ := util.ParseToken(c.GetHeader("Authorization"))
 	if err := c.ShouldBind(&userUpdate); err == nil {
 		res := userUpdate.Update(c.Request.Context(), claims.ID)
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusBadRequest, err)
+	}
+}
+
+func UpdateAvatar(c *gin.Context) {
+	file, fileHeader, _ := c.Request.FormFile("file")
+	fileSize := fileHeader.Size
+	var updateAvatar service.UserService
+	claims, _ := util.ParseToken(c.GetHeader("Authorization"))
+	if err := c.ShouldBind(&updateAvatar); err == nil {
+		res := updateAvatar.Post(c.Request.Context(), claims.ID, file, fileSize)
 		c.JSON(http.StatusOK, res)
 	} else {
 		c.JSON(http.StatusBadRequest, err)

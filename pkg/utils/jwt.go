@@ -44,5 +44,4 @@ func ParseToken(token string) (*Claims, error) {
 		}
 	}
 	return nil, err
-
 }
