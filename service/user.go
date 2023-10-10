@@ -3,12 +3,16 @@ package service
 import (
 	"context"
 	"mime/multipart"
+	"strings"
+	"time"
 
+	"github.com/xilepeng/gin-mall/conf"
 	"github.com/xilepeng/gin-mall/dao"
 	"github.com/xilepeng/gin-mall/model"
 	"github.com/xilepeng/gin-mall/pkg/e"
 	util "github.com/xilepeng/gin-mall/pkg/utils"
 	"github.com/xilepeng/gin-mall/serializer"
+	"gopkg.in/mail.v2"
 )
 
 type UserService struct {
@@ -16,6 +20,15 @@ type UserService struct {
 	UserName string `json:"user_name" form:"user_name"`
 	Password string `json:"password" form:"password"`
 	Key      string `json:"key" form:"key"` // 秘钥：现阶段前端验证
+}
+
+type SendEmailService struct {
+	Email         string `json:"email" form:"email"`
+	Password      string `json:"password" form:"password"`
+	OperationType uint   `json:"operation_type" form:"operation_type"` // 1-绑定邮箱 2-解绑邮箱 3-修改密码
+}
+
+type ValidEmailService struct {
 }
 
 // Register 注册
@@ -183,6 +196,176 @@ func (service *UserService) Post(ctx context.Context, uId uint, file multipart.F
 			Status: code,
 			Msg:    e.GetMsg(code),
 			Error:  err.Error(),
+		}
+	}
+	return serializer.Response{
+		Status: code,
+		Msg:    e.GetMsg(code),
+		Data:   serializer.BuildUser(user),
+	}
+}
+
+// SendEmailService 发送邮件服务 错误版本
+func (service *SendEmailService) Send(ctx context.Context, uId uint) serializer.Response {
+	code := e.SUCCESS
+	var address string
+	var notice *model.Notice // 绑定邮箱，修改密码 模版通知
+	token, err := util.GenerateEmailToken(uId, service.OperationType, service.Email, service.Password)
+	if err != nil {
+		code = e.ErrorAuthToken
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Error:  err.Error(),
+		}
+	}
+	noticeDao := dao.NewNoticeDao(ctx)
+	notice, err = noticeDao.GetNoticeById(service.OperationType)
+	if err != nil {
+		code = e.ErrorAuthCheckTokenFail
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Error:  err.Error(),
+		}
+	}
+	address = conf.ValidEmail + token // 发送方
+	mailStr := notice.Text
+	mailText := strings.Replace(mailStr, "Email", address, -1) // 错误：email 改为 Email
+	m := mail.NewMessage()
+	m.SetHeader("From", conf.SmtpEmail)
+	m.SetHeader("To", service.Email)
+	m.SetHeader("Subject", "hfbpw")
+	m.SetBody("text/html", mailText)
+	d := mail.NewDialer(conf.SmtpHost, 465, conf.SmtpEmail, conf.SmtpPass)
+	d.StartTLSPolicy = mail.MandatoryStartTLS
+	if err = d.DialAndSend(m); err != nil { // 错误修改 err := d.DialAndSend(m)
+		code = e.ErrorSendEmail
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Error:  err.Error(),
+		}
+	}
+	return serializer.Response{
+		Status: code,
+		Msg:    e.GetMsg(code),
+	}
+}
+
+/*
+
+// Send 发送邮件
+func (service *SendEmailService) Send(ctx context.Context, id uint) serializer.Response {
+	code := e.SUCCESS
+	var address string
+
+	token, err := util.GenerateEmailToken(id, service.OperationType, service.Email, service.Password)
+	if err != nil {
+		code = e.ErrorAuthToken
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+		}
+	}
+
+	noticeDao := dao.NewNoticeDao(ctx)
+	notice, err := noticeDao.GetNoticeById(service.OperationType)
+	if err != nil {
+		code = e.ErrorDatabase
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Error:  err.Error(),
+		}
+	}
+	address = conf.ValidEmail + token
+	mailStr := notice.Text
+	mailText := strings.Replace(mailStr, "Email", address, -1)
+	m := mail.NewMessage()
+	m.SetHeader("From", conf.SmtpEmail)
+	m.SetHeader("To", service.Email)
+	m.SetHeader("Subject", "FanOne")
+	m.SetBody("text/html", mailText)
+	d := mail.NewDialer(conf.SmtpHost, 465, conf.SmtpEmail, conf.SmtpPass)
+	d.StartTLSPolicy = mail.MandatoryStartTLS
+	if err := d.DialAndSend(m); err != nil {
+		code = e.ErrorSendEmail
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+		}
+	}
+	return serializer.Response{
+		Status: code,
+		Msg:    e.GetMsg(code),
+	}
+}
+
+*/
+
+// Valid 验证邮箱
+func (service *ValidEmailService) Valid(ctx context.Context, token string) serializer.Response {
+	var userId uint
+	var email string
+	var password string
+	var operationType uint
+	code := e.SUCCESS
+	// 验证 token
+	if token == "" {
+		code = e.InvalidParams
+	} else {
+		claims, err := util.ParseEmailToken(token)
+		if err != nil {
+			code = e.ErrorAuthToken
+		} else if time.Now().Unix() > claims.ExpiresAt {
+			code = e.ErrorAuthCheckTokenTimeout
+		} else {
+			userId = claims.UserID
+			email = claims.Email
+			password = claims.Password
+			operationType = claims.OperationType
+		}
+	}
+	if code != e.SUCCESS {
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+		}
+	}
+	// 获取该用户的信息
+	userDao := dao.NewUserDao(ctx)
+	user, err := userDao.GetUserById(userId)
+	if err != nil {
+		code = e.Error
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+		}
+	}
+	if operationType == 1 {
+		// 绑定邮箱
+		user.Email = email
+	} else if operationType == 2 {
+		// 解绑邮箱
+		user.Email = ""
+	} else if operationType == 3 {
+		// 修改密码
+		err = user.SetPassword(password)
+		if err != nil {
+			code = e.Error
+			return serializer.Response{
+				Status: code,
+				Msg:    e.GetMsg(code),
+			}
+		}
+	}
+	err = userDao.UpdateUserById(userId, user)
+	if err != nil {
+		code = e.Error
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
 		}
 	}
 	return serializer.Response{

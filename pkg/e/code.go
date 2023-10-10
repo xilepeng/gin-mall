@@ -6,14 +6,18 @@ const (
 	InvalidParams = 400
 
 	// User 模块错误 3xxxx
-	ErrorExistUser             = 3001
-	ErrorFailEncryption        = 3002
-	ErrorExistUserNotFound     = 3003
-	ErrorNotCompare            = 3004
-	ErrorAuthCheckTokenFail    = 3005
+	ErrorExistUser             = 30001
+	ErrorFailEncryption        = 30002
+	ErrorExistUserNotFound     = 30003
+	ErrorNotCompare            = 30004
+	ErrorAuthCheckTokenFail    = 30005
 	ErrorAuthCheckTokenTimeout = 30006
-	ErrorUploadFail            = 3007
+	ErrorUploadFail            = 30007
+
+	// 邮件发送
+	ErrorSendEmail = 30009
+	ErrorAuthToken = 30008
 
 	// Product 模块错误 4xxxx
-
+	ErrorDatabase = 40001
 )

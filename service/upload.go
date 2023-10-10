@@ -6,8 +6,8 @@ import (
 	"mime/multipart"
 	"os"
 	"strconv"
-	"github.com/xilepeng/gin-mall/conf"
 
+	"github.com/xilepeng/gin-mall/conf"
 )
 
 func UploadAvatarToLocalStatic(file multipart.File, userId uint, userName string) (filePath string, err error) {
