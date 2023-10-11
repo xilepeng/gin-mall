@@ -5,6 +5,7 @@ import (
 
 	"github.com/xilepeng/gin-mall/dao"
 	"github.com/xilepeng/gin-mall/pkg/e"
+	util "github.com/xilepeng/gin-mall/pkg/utils"
 	"github.com/xilepeng/gin-mall/serializer"
 )
 
@@ -16,6 +17,7 @@ func (service *CarouselService) List(ctx context.Context) serializer.Response {
 	code := e.SUCCESS
 	carousels, err := carouselDao.ListCarousel()
 	if err != nil {
+		util.LogrusObj.Infoln("err", err)
 		code = e.Error
 		return serializer.Response{
 			Status: code,
