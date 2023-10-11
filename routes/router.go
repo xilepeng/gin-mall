@@ -22,6 +22,9 @@ func NewRouter() *gin.Engine {
 		v1.POST("user/register", api.UserRegister)
 		v1.POST("user/login", api.UserLogin)
 
+		// 轮播图
+		v1.GET("carousels", api.ListCarousel)
+
 		// 需要登录保护
 		authed := v1.Group("/")
 		authed.Use(middleware.JWT())
@@ -31,6 +34,7 @@ func NewRouter() *gin.Engine {
 			authed.POST("user/updateAvatar", api.UpdateAvatar)
 			authed.POST("user/sending-email", api.SendEmail) // 绑定邮箱
 			authed.POST("user/valid-email", api.ValidEmail)  // 验证邮箱
+
 		}
 	}
 	return r
