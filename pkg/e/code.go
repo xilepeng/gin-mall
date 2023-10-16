@@ -13,11 +13,10 @@ const (
 	ErrorAuthCheckTokenFail    = 30005
 	ErrorAuthCheckTokenTimeout = 30006
 	ErrorUploadFail            = 30007
-
 	// 邮件发送
-	ErrorSendEmail = 30009
 	ErrorAuthToken = 30008
+	ErrorSendEmail = 30009
 
 	// Product 模块错误 4xxxx
-	ErrorDatabase = 40001
+	ErrorProductImgUpload = 40001
 )

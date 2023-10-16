@@ -16,7 +16,7 @@ var MsgFlags = map[int]string{
 	ErrorSendEmail: "邮件发送失败",
 	ErrorAuthToken: "Token生成失败",
 
-	ErrorDatabase: "数据库操作出错,请重试",
+	ErrorProductImgUpload: "图片上传错误",
 }
 
 // GetMsg 获取状态码对应的信息

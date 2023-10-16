@@ -35,6 +35,9 @@ func NewRouter() *gin.Engine {
 			authed.POST("user/sending-email", api.SendEmail) // 绑定邮箱
 			authed.POST("user/valid-email", api.ValidEmail)  // 验证邮箱
 
+			// 商品操作
+			authed.POST("product", api.CreateProduct)
+
 		}
 	}
 	return r
