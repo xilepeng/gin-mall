@@ -22,8 +22,9 @@ func NewRouter() *gin.Engine {
 		v1.POST("user/register", api.UserRegister)
 		v1.POST("user/login", api.UserLogin)
 
-		v1.GET("carousels", api.ListCarousel) // 轮播图
-		v1.GET("products", api.ListProduct)   // 获取商品列表
+		v1.GET("carousels", api.ListCarousel)   // 轮播图
+		v1.GET("products", api.ListProduct)     // 获取商品列表
+		v1.GET("products/:id", api.ShowProduct) // 获取商品展示信息
 
 		// 需要登录保护
 		authed := v1.Group("/")

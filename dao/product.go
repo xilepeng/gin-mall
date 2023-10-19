@@ -46,3 +46,9 @@ func (dao *ProductDao) SearchProduct(info string, page model.BasePage) (products
 		Limit(page.PageSize).Find(&products).Error
 	return
 }
+
+func (dao *ProductDao) GetProductById(id uint) (product *model.Product, err error) {
+	err = dao.DB.Model(&model.Product{}).Where("id=?", id).
+		First(&product).Error
+	return
+}

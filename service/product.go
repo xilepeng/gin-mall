@@ -130,7 +130,7 @@ func (service *ProductService) List(ctx context.Context) serializer.Response {
 		util.LogrusObj.Infoln(err)
 		return serializer.Response{
 			Status: code,
-			Data:   e.GetMsg(code),
+			Msg:    e.GetMsg(code),
 			Error:  err.Error(),
 		}
 	}
@@ -160,9 +160,31 @@ func (service *ProductService) Search(ctx context.Context) serializer.Response {
 		util.LogrusObj.Infoln(err)
 		return serializer.Response{
 			Status: code,
-			Data:   e.GetMsg(code),
+			Msg:    e.GetMsg(code),
 			Error:  err.Error(),
 		}
 	}
 	return serializer.BuildListResponse(serializer.BuildProducts(products), uint(count))
+}
+
+// Show 获取商品展示信息服务
+func (service *ProductService) Show(ctx context.Context, id string) serializer.Response {
+	code := e.SUCCESS
+	pId, _ := strconv.Atoi(id)
+	productDao := dao.NewProductDao(ctx)
+	product, err := productDao.GetProductById(uint(pId))
+	if err != nil {
+		code = e.Error
+		util.LogrusObj.Infoln(err)
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Error:  err.Error(),
+		}
+	}
+	return serializer.Response{
+		Status: code,
+		Msg:    e.GetMsg(code),
+		Data:   serializer.BuildProduct(product),
+	}
 }
