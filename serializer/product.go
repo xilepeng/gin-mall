@@ -5,6 +5,8 @@ import (
 	"github.com/xilepeng/gin-mall/model"
 )
 
+// 将数据序列化为 json 的函数，便于返回给前端
+
 type Product struct {
 	Id            uint   `json:"id"`
 	Name          string `json:"name"`

@@ -7,6 +7,8 @@ import (
 	"gorm.io/gorm"
 )
 
+//  dao层，对db进行操作
+
 type ProductDao struct {
 	*gorm.DB
 }
@@ -29,5 +31,18 @@ func (dao *ProductDao) CountProductByCondition(condition map[string]interface{})
 
 func (dao *ProductDao) ListProductByCondition(condition map[string]interface{}, page model.BasePage) (products []*model.Product, err error) {
 	err = dao.DB.Preload("Category").Where(condition).Offset((page.PageSize - 1) * (page.PageNum)).Limit(page.PageSize).Find(&products).Error
+	return
+}
+
+func (dao *ProductDao) SearchProduct(info string, page model.BasePage) (products []*model.Product, count int64, err error) {
+	err = dao.DB.Model(&model.Product{}).
+		Where("title LIKE ? OR info LIKE ?", "%"+info+"%", "%"+info+"%").Count(&count).Error
+	if err != nil {
+		return
+	}
+	err = dao.DB.Model(&model.Product{}).
+		Where("title LIKE ? OR info LIKE ?", "%"+info+"%", "%"+info+"%").
+		Offset((page.PageSize - 1) * (page.PageNum)).
+		Limit(page.PageSize).Find(&products).Error
 	return
 }

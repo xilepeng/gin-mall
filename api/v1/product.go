@@ -8,6 +8,7 @@ import (
 	"github.com/xilepeng/gin-mall/service"
 )
 
+// CreateProduct 创建商品
 func CreateProduct(c *gin.Context) {
 	form, _ := c.MultipartForm()
 	files := form.File["file"]
@@ -22,10 +23,23 @@ func CreateProduct(c *gin.Context) {
 	}
 }
 
+// ListProduct 获取商品列表
 func ListProduct(c *gin.Context) {
 	listProductService := service.ProductService{}
 	if err := c.ShouldBind(&listProductService); err == nil {
 		res := listProductService.List(c.Request.Context())
+		c.JSON(http.StatusOK, res)
+	} else {
+		c.JSON(http.StatusBadRequest, ErrorResponse(err))
+		util.LogrusObj.Infoln(err)
+	}
+}
+
+// SearchProduct 搜索商品
+func SearchProduct(c *gin.Context) {
+	searchProductService := service.ProductService{}
+	if err := c.ShouldBind(&searchProductService); err == nil {
+		res := searchProductService.Search(c.Request.Context())
 		c.JSON(http.StatusOK, res)
 	} else {
 		c.JSON(http.StatusBadRequest, ErrorResponse(err))

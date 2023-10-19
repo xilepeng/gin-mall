@@ -7,6 +7,8 @@ import (
 	"gorm.io/gorm"
 )
 
+// 定义mysql的模型
+
 type Product struct {
 	gorm.Model
 	Name          string

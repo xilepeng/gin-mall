@@ -13,6 +13,8 @@ import (
 	"github.com/xilepeng/gin-mall/serializer"
 )
 
+// 接口函数的实现
+
 type ProductService struct {
 	Id            uint   `json:"id" form:"id"`
 	Name          string `json:"name" form:"name"`
@@ -143,4 +145,24 @@ func (service *ProductService) List(ctx context.Context) serializer.Response {
 	wg.Wait()
 
 	return serializer.BuildListResponse(serializer.BuildProducts(products), uint(total))
+}
+
+// Search 搜索商品
+func (service *ProductService) Search(ctx context.Context) serializer.Response {
+	code := e.SUCCESS
+	if service.PageSize == 0 {
+		service.PageSize = 15
+	}
+	productDao := dao.NewProductDao(ctx)
+	products, count, err := productDao.SearchProduct(service.Info, service.BasePage)
+	if err != nil {
+		code = e.Error
+		util.LogrusObj.Infoln(err)
+		return serializer.Response{
+			Status: code,
+			Data:   e.GetMsg(code),
+			Error:  err.Error(),
+		}
+	}
+	return serializer.BuildListResponse(serializer.BuildProducts(products), uint(count))
 }

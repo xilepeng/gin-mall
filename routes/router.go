@@ -22,11 +22,8 @@ func NewRouter() *gin.Engine {
 		v1.POST("user/register", api.UserRegister)
 		v1.POST("user/login", api.UserLogin)
 
-		// 轮播图
-		v1.GET("carousels", api.ListCarousel)
-
-		// 商品操作
-		v1.GET("products", api.ListProduct)
+		v1.GET("carousels", api.ListCarousel) // 轮播图
+		v1.GET("products", api.ListProduct)   // 获取商品列表
 
 		// 需要登录保护
 		authed := v1.Group("/")
@@ -39,7 +36,8 @@ func NewRouter() *gin.Engine {
 			authed.POST("user/valid-email", api.ValidEmail)  // 验证邮箱
 
 			// 商品操作
-			authed.POST("product", api.CreateProduct)
+			authed.POST("product", api.CreateProduct)        // 创建商品
+			authed.POST("search_product", api.SearchProduct) // 搜索商品
 
 		}
 	}
