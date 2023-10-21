@@ -27,6 +27,7 @@ func NewRouter() *gin.Engine {
 		v1.GET("products", api.ListProduct)     // 获取商品列表
 		v1.GET("products/:id", api.ShowProduct) // 获取商品展示信息
 		v1.GET("imgs/:id", api.ListProductImg)  // 获取商品图片
+		v1.GET("categories", api.ListCategory)  // 商品分类
 
 		// 需要登录保护
 		authed := v1.Group("/")
@@ -41,7 +42,6 @@ func NewRouter() *gin.Engine {
 			// 商品操作
 			authed.POST("product", api.CreateProduct)        // 创建商品
 			authed.POST("search_product", api.SearchProduct) // 搜索商品
-
 		}
 	}
 	return r
