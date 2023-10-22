@@ -19,7 +19,6 @@ func NewCategoryDaoByDB(db *gorm.DB) *CategoryDao {
 	return &CategoryDao{db}
 }
 
-// GetCategoryById 根据 id 获取 Category
 func (dao *CategoryDao) ListCategory() (category []model.Category, err error) {
 	err = dao.DB.Model(&model.Category{}).Find(&category).Error
 	return
