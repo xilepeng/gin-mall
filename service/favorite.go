@@ -24,7 +24,7 @@ func (service *FavoriteService) List(ctx context.Context, uId uint) serializer.R
 	code := e.SUCCESS
 	favorite, err := favoriteDao.ListFavorite(uId)
 	if err != nil {
-		code = e.Error
+		code = e.ERROR
 		util.LogrusObj.Infoln(err)
 		return serializer.Response{
 			Status: code,
@@ -41,7 +41,7 @@ func (service *FavoriteService) Create(ctx context.Context, uId uint) serializer
 	favoriteDao := dao.NewFavoriteDao(ctx)
 	exist, _ := favoriteDao.FavoriteExistOrNot(service.ProductId, uId)
 	if exist {
-		code = e.ErrorFavoriteExist
+		code = e.ErrorExistFavorite
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -51,7 +51,7 @@ func (service *FavoriteService) Create(ctx context.Context, uId uint) serializer
 	userDao := dao.NewUserDao(ctx)
 	user, err := userDao.GetUserById(uId)
 	if err != nil {
-		code = e.Error
+		code = e.ErrorUserNotFound
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -61,7 +61,7 @@ func (service *FavoriteService) Create(ctx context.Context, uId uint) serializer
 	bossDao := dao.NewUserDao(ctx)
 	boss, err := bossDao.GetUserById(service.BossId)
 	if err != nil {
-		code = e.Error
+		code = e.ErrorUserNotFound
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -71,7 +71,7 @@ func (service *FavoriteService) Create(ctx context.Context, uId uint) serializer
 	productDao := dao.NewProductDao(ctx)
 	product, err := productDao.GetProductById(service.ProductId)
 	if err != nil {
-		code = e.Error
+		code = e.ErrorNotExistProduct
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -89,7 +89,7 @@ func (service *FavoriteService) Create(ctx context.Context, uId uint) serializer
 
 	err = favoriteDao.CreateFavorite(favorite)
 	if err != nil {
-		code = e.Error
+		code = e.ErrorExistFavorite
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -108,7 +108,7 @@ func (service *FavoriteService) Delete(ctx context.Context, uId uint, fId string
 	code := e.SUCCESS
 	err := favoriteDao.DeleteFavorite(uId, uint(favoriteId))
 	if err != nil {
-		code = e.Error
+		code = e.ERROR
 		util.LogrusObj.Infoln(err)
 		return serializer.Response{
 			Status: code,

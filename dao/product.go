@@ -30,7 +30,9 @@ func (dao *ProductDao) CountProductByCondition(condition map[string]interface{})
 }
 
 func (dao *ProductDao) ListProductByCondition(condition map[string]interface{}, page model.BasePage) (products []*model.Product, err error) {
-	err = dao.DB.Preload("Category").Where(condition).Offset((page.PageSize - 1) * (page.PageNum)).Limit(page.PageSize).Find(&products).Error
+	err = dao.DB.Preload("Category").Where(condition).
+		Offset((page.PageSize - 1) * (page.PageNum)).
+		Limit(page.PageSize).Find(&products).Error
 	return
 }
 

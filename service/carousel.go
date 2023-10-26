@@ -18,7 +18,7 @@ func (service *CarouselService) List(ctx context.Context) serializer.Response {
 	carousels, err := carouselDao.ListCarousel()
 	if err != nil {
 		util.LogrusObj.Infoln("err", err)
-		code = e.Error
+		code = e.ERROR
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),

@@ -39,7 +39,7 @@ func (service *ProductService) Create(ctx context.Context, uId uint, files []*mu
 	tmp, _ := files[0].Open()
 	path, err := UploadProductToLocalStatic(tmp, uId, service.Name)
 	if err != nil {
-		code = e.ErrorProductImgUpload
+		code = e.ErrorNotExistProduct
 		util.LogrusObj.Infoln(err)
 		return serializer.Response{
 			Status: code,
@@ -64,7 +64,7 @@ func (service *ProductService) Create(ctx context.Context, uId uint, files []*mu
 	productDao := dao.NewProductDao(ctx)
 	err = productDao.CreateProduct(product)
 	if err != nil {
-		code = e.Error
+		code = e.ERROR
 		util.LogrusObj.Infoln(err)
 		return serializer.Response{
 			Status: code,
@@ -80,7 +80,7 @@ func (service *ProductService) Create(ctx context.Context, uId uint, files []*mu
 		tmp, _ = file.Open()
 		path, err = UploadProductToLocalStatic(tmp, uId, service.Name+num)
 		if err != nil {
-			code = e.ErrorProductImgUpload
+			code = e.ErrorNotExistProduct
 			return serializer.Response{
 				Status: code,
 				Msg:    e.GetMsg(code),
@@ -93,7 +93,7 @@ func (service *ProductService) Create(ctx context.Context, uId uint, files []*mu
 		}
 		err = productImgDao.CreateProductImg(&productImg)
 		if err != nil {
-			code = e.Error
+			code = e.ERROR
 			return serializer.Response{
 				Status: code,
 				Msg:    e.GetMsg(code),
@@ -126,7 +126,7 @@ func (service *ProductService) List(ctx context.Context) serializer.Response {
 	productDao := dao.NewProductDao(ctx)
 	total, err := productDao.CountProductByCondition(condition)
 	if err != nil {
-		code = e.Error
+		code = e.ERROR
 		util.LogrusObj.Infoln(err)
 		return serializer.Response{
 			Status: code,
@@ -156,7 +156,7 @@ func (service *ProductService) Search(ctx context.Context) serializer.Response {
 	productDao := dao.NewProductDao(ctx)
 	products, count, err := productDao.SearchProduct(service.Info, service.BasePage)
 	if err != nil {
-		code = e.Error
+		code = e.ERROR
 		util.LogrusObj.Infoln(err)
 		return serializer.Response{
 			Status: code,
@@ -174,7 +174,7 @@ func (service *ProductService) Show(ctx context.Context, id string) serializer.R
 	productDao := dao.NewProductDao(ctx)
 	product, err := productDao.GetProductById(uint(pId))
 	if err != nil {
-		code = e.Error
+		code = e.ERROR
 		util.LogrusObj.Infoln(err)
 		return serializer.Response{
 			Status: code,

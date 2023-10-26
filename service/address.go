@@ -30,7 +30,7 @@ func (service *AddressService) Create(ctx context.Context, uId uint) serializer.
 	err := addressDao.CreateAddress(address)
 	if err != nil {
 		util.LogrusObj.Infoln("err", err)
-		code = e.Error
+		code = e.ERROR
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -50,7 +50,7 @@ func (service *AddressService) Show(ctx context.Context, aId string) serializer.
 	address, err := addressDao.GetAddressByAid(uint(addressId))
 	if err != nil {
 		util.LogrusObj.Infoln("err", err)
-		code = e.Error
+		code = e.ERROR
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -70,7 +70,7 @@ func (service *AddressService) List(ctx context.Context, uId uint) serializer.Re
 	addressList, err := addressDao.ListAddressByUserId(uId)
 	if err != nil {
 		util.LogrusObj.Infoln("err", err)
-		code = e.Error
+		code = e.ERROR
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -98,7 +98,7 @@ func (service *AddressService) Update(ctx context.Context, uId uint, aId string)
 	err := addressDao.UpdateAddressByUserId(uint(addressId), address)
 	if err != nil {
 		util.LogrusObj.Infoln("err", err)
-		code = e.Error
+		code = e.ERROR
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -119,7 +119,7 @@ func (service *AddressService) Delete(ctx context.Context, uId uint, aId string)
 	err := addressDao.DeleteAddressByAddressId(uint(addressId), uId)
 	if err != nil {
 		util.LogrusObj.Infoln("err", err)
-		code = e.Error
+		code = e.ERROR
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),

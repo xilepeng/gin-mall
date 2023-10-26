@@ -36,7 +36,7 @@ func (service *UserService) Register(ctx context.Context) serializer.Response {
 	var user model.User
 	code := e.SUCCESS
 	if service.Key == "" || len(service.Key) != 16 {
-		code = e.Error
+		code = e.ERROR
 		return serializer.Response{
 			Status: code,
 			Data:   e.GetMsg(code),
@@ -48,7 +48,7 @@ func (service *UserService) Register(ctx context.Context) serializer.Response {
 	userDao := dao.NewUserDao(ctx)
 	_, exiest, err := userDao.ExistOrNotByUserName(service.UserName)
 	if err != nil {
-		code = e.Error
+		code = e.ERROR
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -80,7 +80,7 @@ func (service *UserService) Register(ctx context.Context) serializer.Response {
 	// 创建用户
 	err = userDao.CreateUser(&user)
 	if err != nil {
-		code = e.Error
+		code = e.ERROR
 	}
 	return serializer.Response{
 		Status: code,
@@ -98,7 +98,7 @@ func (service *UserService) Login(ctx context.Context) serializer.Response {
 	user, exist, err := userDao.ExistOrNotByUserName(service.UserName)
 	//  存在 exist == true
 	if !exist || err != nil { // ❌ if exist || err == nil
-		code = e.ErrorExistUserNotFound
+		code = e.ErrorNotExistUser
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -149,7 +149,7 @@ func (service *UserService) Update(ctx context.Context, uId uint) serializer.Res
 	}
 	err = userDao.UpdateUserById(uId, user)
 	if err != nil {
-		code = e.Error
+		code = e.ERROR
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -171,7 +171,7 @@ func (service *UserService) Post(ctx context.Context, uId uint, file multipart.F
 	userDao := dao.NewUserDao(ctx)
 	user, err = userDao.GetUserById(uId)
 	if err != nil {
-		code = e.Error
+		code = e.ERROR
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -181,7 +181,7 @@ func (service *UserService) Post(ctx context.Context, uId uint, file multipart.F
 	// 保存图片到本地
 	path, err := UploadAvatarToLocalStatic(file, uId, user.UserName)
 	if err != nil {
-		code = e.ErrorUploadFail
+		code = e.ErrorUploadFile
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -191,7 +191,7 @@ func (service *UserService) Post(ctx context.Context, uId uint, file multipart.F
 	user.Avatar = path
 	err = userDao.UpdateUserById(uId, user)
 	if err != nil {
-		code = e.Error
+		code = e.ERROR
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -337,7 +337,7 @@ func (service *ValidEmailService) Valid(ctx context.Context, token string) seria
 	userDao := dao.NewUserDao(ctx)
 	user, err := userDao.GetUserById(userId)
 	if err != nil {
-		code = e.Error
+		code = e.ERROR
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -353,7 +353,7 @@ func (service *ValidEmailService) Valid(ctx context.Context, token string) seria
 		// 修改密码
 		err = user.SetPassword(password)
 		if err != nil {
-			code = e.Error
+			code = e.ERROR
 			return serializer.Response{
 				Status: code,
 				Msg:    e.GetMsg(code),
@@ -362,7 +362,7 @@ func (service *ValidEmailService) Valid(ctx context.Context, token string) seria
 	}
 	err = userDao.UpdateUserById(userId, user)
 	if err != nil {
-		code = e.Error
+		code = e.ERROR
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),

@@ -26,7 +26,7 @@ func (service *CartService) Create(ctx context.Context, uId uint) serializer.Res
 	product, err := productDao.GetProductById(service.ProductId)
 	if err != nil {
 		util.LogrusObj.Infoln("err", err)
-		code = e.Error
+		code = e.ERROR
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -44,7 +44,7 @@ func (service *CartService) Create(ctx context.Context, uId uint) serializer.Res
 	err = cartDao.CreateCart(cart)
 	if err != nil {
 		util.LogrusObj.Infoln("err", err)
-		code = e.Error
+		code = e.ERROR
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -56,7 +56,7 @@ func (service *CartService) Create(ctx context.Context, uId uint) serializer.Res
 	boss, err := userDao.GetUserById(service.BossId)
 	if err != nil {
 		util.LogrusObj.Infoln("err", err)
-		code = e.Error
+		code = e.ERROR
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -77,7 +77,7 @@ func (service *CartService) List(ctx context.Context, uId uint) serializer.Respo
 	carts, err := cartDao.ListCartByUserId(uId)
 	if err != nil {
 		util.LogrusObj.Infoln("err", err)
-		code = e.Error
+		code = e.ERROR
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -98,7 +98,7 @@ func (service *CartService) Update(ctx context.Context, uId uint, cId string) se
 	err := cartDao.UpdateCartNumById(uint(cartId), service.Num)
 	if err != nil {
 		util.LogrusObj.Infoln("err", err)
-		code = e.Error
+		code = e.ERROR
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -118,7 +118,7 @@ func (service *CartService) Delete(ctx context.Context, uId uint, cId string) se
 	err := cartDao.DeleteCartByCartId(uint(cartId), uId)
 	if err != nil {
 		util.LogrusObj.Infoln("err", err)
-		code = e.Error
+		code = e.ERROR
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
