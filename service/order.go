@@ -16,7 +16,7 @@ import (
 
 type OrderService struct {
 	ProductId uint    `json:"product_id" form:"product_id"`
-	Num       int     `json:"num"`
+	Num       int     `json:"num" form:"num"`
 	AddressId uint    `json:"address_id" form:"address_id"`
 	Money     float64 `json:"money" form:"money"`
 	BossId    uint    `json:"boss_id" form:"boss_id"`
@@ -27,11 +27,10 @@ type OrderService struct {
 }
 
 func (service *OrderService) Create(ctx context.Context, uId uint) serializer.Response {
-	var order *model.Order
-
 	code := e.SUCCESS
+
 	orderDao := dao.NewOrderDao(ctx)
-	order = &model.Order{
+	order := &model.Order{
 		UserId:    uId,
 		ProductId: service.ProductId,
 		BossId:    service.BossId,

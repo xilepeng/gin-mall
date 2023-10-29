@@ -8,7 +8,7 @@ import (
 	"github.com/xilepeng/gin-mall/service"
 )
 
-// CreateCart 新建收藏
+// CreateCart 创建购物车
 func CreateCart(c *gin.Context) {
 	claim, _ := util.ParseToken(c.GetHeader("Authorization"))
 	createCartsService := service.CartService{}
@@ -21,7 +21,7 @@ func CreateCart(c *gin.Context) {
 	}
 }
 
-// DeleteCart 删除收藏夹
+// DeleteCart 删除购物车
 func DeleteCart(c *gin.Context) {
 	deleteCartService := service.CartService{}
 	claim, _ := util.ParseToken(c.GetHeader("Authorization"))
@@ -34,7 +34,7 @@ func DeleteCart(c *gin.Context) {
 	}
 }
 
-// UpdateCart 新建收藏
+// UpdateCart 修改购物车
 func UpdateCart(c *gin.Context) {
 	claim, _ := util.ParseToken(c.GetHeader("Authorization"))
 	updateCartsService := service.CartService{}
@@ -47,12 +47,12 @@ func UpdateCart(c *gin.Context) {
 	}
 }
 
-// ListCart 获取商品展示信息
+// ListCart 展示购物车信息
 func ListCart(c *gin.Context) {
 	claim, _ := util.ParseToken(c.GetHeader("Authorization"))
 	listCartService := service.CartService{}
 	if err := c.ShouldBind(&listCartService); err == nil {
-		res := listCartService.List(c.Request.Context(), claim.ID)
+		res := listCartService.Show(c.Request.Context(), claim.ID)
 		c.JSON(http.StatusOK, res)
 	} else {
 		c.JSON(http.StatusBadRequest, ErrorResponse(err))

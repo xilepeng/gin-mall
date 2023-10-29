@@ -41,7 +41,7 @@ func BuildProduct(item *model.Product) Product {
 		OnSale:        item.OnSale,
 		BossId:        item.BossId,
 		BossName:      item.BossName,
-		BossAvatar:    item.BossAvatar,
+		BossAvatar:    conf.Host + conf.HttpPort + conf.AvatarPath + item.BossAvatar,
 	}
 }
 func BuildProducts(items []*model.Product) (products []Product) {

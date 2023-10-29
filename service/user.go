@@ -66,7 +66,7 @@ func (service *UserService) Register(ctx context.Context) serializer.Response {
 		NiceName: service.NickName,
 		Status:   model.Active,
 		Avatar:   "avatar.jpeg",
-		Money:    util.Encrypt.AesEncoding("1000"), // 初始金额加密
+		Money:    util.Encrypt.AesEncoding("999999"), // 初始金额加密
 	}
 	// 密码加密
 	if err = user.SetPassword(service.Password); err != nil {
@@ -106,7 +106,7 @@ func (service *UserService) Login(ctx context.Context) serializer.Response {
 		}
 	}
 	// 校验密码
-	if user.CheckPassword(service.Password) == false {
+	if !user.CheckPassword(service.Password) {
 		code = e.ErrorNotCompare
 		return serializer.Response{
 			Status: code,
@@ -121,7 +121,7 @@ func (service *UserService) Login(ctx context.Context) serializer.Response {
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
-			// Data:   "token 认证失败!",
+			Data:   "token 认证失败!",
 		}
 	}
 	return serializer.Response{
@@ -140,9 +140,19 @@ func (service *UserService) Update(ctx context.Context, uId uint) serializer.Res
 	var user *model.User
 	var err error
 	code := e.SUCCESS
+
 	// 找到这个用户
 	userDao := dao.NewUserDao(ctx)
 	user, err = userDao.GetUserById(uId)
+	if err != nil {
+		code = e.ERROR
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Error:  err.Error(),
+		}
+	}
+
 	// 修改昵称 nickname
 	if service.NickName != "" {
 		user.NiceName = service.NickName
@@ -178,6 +188,7 @@ func (service *UserService) Post(ctx context.Context, uId uint, file multipart.F
 			Error:  err.Error(),
 		}
 	}
+
 	// 保存图片到本地
 	path, err := UploadAvatarToLocalStatic(file, uId, user.UserName)
 	if err != nil {

@@ -38,6 +38,7 @@ func NewRouter() *gin.Engine {
 			authed.POST("user/updateAvatar", api.UpdateAvatar)
 			authed.POST("user/sending-email", api.SendEmail) // 绑定邮箱
 			authed.POST("user/valid-email", api.ValidEmail)  // 验证邮箱
+			authed.GET("money", api.ShowMoney)               // 显示余额
 
 			// 商品操作
 			authed.POST("product", api.CreateProduct)        // 创建商品
@@ -68,6 +69,7 @@ func NewRouter() *gin.Engine {
 			authed.DELETE("orders/:id", api.DeleteOrder) // 删除订单
 
 			// 支付操作
+			authed.POST("paydown", api.OrderPay)
 		}
 	}
 	return r

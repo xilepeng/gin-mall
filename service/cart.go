@@ -71,7 +71,8 @@ func (service *CartService) Create(ctx context.Context, uId uint) serializer.Res
 	}
 }
 
-func (service *CartService) List(ctx context.Context, uId uint) serializer.Response {
+// Show 购物车
+func (service *CartService) Show(ctx context.Context, uId uint) serializer.Response {
 	code := e.SUCCESS
 	cartDao := dao.NewCartDao(ctx)
 	carts, err := cartDao.ListCartByUserId(uId)
@@ -91,6 +92,7 @@ func (service *CartService) List(ctx context.Context, uId uint) serializer.Respo
 	}
 }
 
+// Update 修改购物车信息
 func (service *CartService) Update(ctx context.Context, uId uint, cId string) serializer.Response {
 	code := e.SUCCESS
 	cartDao := dao.NewCartDao(ctx)
@@ -111,6 +113,7 @@ func (service *CartService) Update(ctx context.Context, uId uint, cId string) se
 	}
 }
 
+// Delete 删除购物车
 func (service *CartService) Delete(ctx context.Context, uId uint, cId string) serializer.Response {
 	cartId, _ := strconv.Atoi(cId)
 	code := e.SUCCESS
