@@ -10,7 +10,7 @@ var jwtSecret = []byte("hfbpw")
 
 type Claims struct {
 	ID        uint   `json:"id"`
-	Username  string `json:"username"`  // 注意区分：UserName ❌
+	UserName  string `json:"username"`  // 注意区分：UserName ❌
 	Authoriey int    `json:"authoriey"` // 权限
 	jwt.StandardClaims
 }
@@ -21,7 +21,7 @@ func GenerateToken(id uint, username string, authority int) (string, error) {
 	expireTime := nowTime.Add(24 * time.Hour)
 	claims := Claims{
 		ID:        id,
-		Username:  username,
+		UserName:  username,
 		Authoriey: authority,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
@@ -54,7 +54,7 @@ type EmailClaims struct {
 	jwt.StandardClaims
 }
 
-// GenerateEmailToken 签发 EmailToken
+// GenerateEmailToken 签发 Email Token
 func GenerateEmailToken(userId, Operation uint, email, password string) (string, error) {
 	nowTime := time.Now()
 	expireTime := nowTime.Add(24 * time.Hour)
@@ -74,7 +74,7 @@ func GenerateEmailToken(userId, Operation uint, email, password string) (string,
 	return token, err
 }
 
-// ParseEmailToken 解析 EmailToken
+// ParseEmailToken 解析 Email Token
 func ParseEmailToken(token string) (*EmailClaims, error) {
 	tokenClaims, err := jwt.ParseWithClaims(token, &EmailClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return jwtSecret, nil

@@ -47,9 +47,11 @@ func Database(connRead, connWrite string) {
 
 	// 主从配置
 	_ = _db.Use(dbresolver.Register(dbresolver.Config{
-		Sources:  []gorm.Dialector{mysql.Open(connWrite)},                      // 写操作
-		Replicas: []gorm.Dialector{mysql.Open(connRead), mysql.Open(connRead)}, // 读操作
-		Policy:   dbresolver.RandomPolicy{},                                    // 策略：负载均衡
+		// Sources:  []gorm.Dialector{mysql.Open(connWrite)},                      // 写操作
+		// Replicas: []gorm.Dialector{mysql.Open(connRead), mysql.Open(connRead)}, // 读操作
+		Sources:  []gorm.Dialector{mysql.Open(connRead)},                         // 写操作
+		Replicas: []gorm.Dialector{mysql.Open(connWrite), mysql.Open(connWrite)}, // 读操作
+		Policy:   dbresolver.RandomPolicy{},                                      // 策略：负载均衡
 	}))
 	migration()
 }

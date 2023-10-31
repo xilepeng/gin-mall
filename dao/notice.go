@@ -19,7 +19,7 @@ func NewNoticeDaoByDB(db *gorm.DB) *NoticeDao {
 	return &NoticeDao{db}
 }
 
-// GetUserById 根据 id 获取 user
+// GetNoticeById 根据 id 获取 notice
 func (dao *NoticeDao) GetNoticeById(id uint) (notice *model.Notice, err error) { // nitice 拼写错误
 	err = dao.DB.Model(&model.Notice{}).Where("id=?", id).First(&notice).Error
 	return
