@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	logging "github.com/sirupsen/logrus"
 	"github.com/xilepeng/gin-mall/dao"
 	"gopkg.in/ini.v1"
 )
@@ -54,10 +55,10 @@ func Init() {
 	LoadEs(file)
 	LoadPhotoPath(file)
 
-	// if err := LoadLocales("conf/locales/zh-cn.yaml"); err != nil {
-	// 	logging.Info(err) //日志内容
-	// 	panic(err)
-	// }
+	if err := LoadLocales("conf/locales/zh-cn.yaml"); err != nil {
+		logging.Info(err) //日志内容
+		panic(err)
+	}
 
 	// MySQL 主从复制配置
 	//MySQL 读 （8）主

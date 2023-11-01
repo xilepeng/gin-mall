@@ -11,7 +11,7 @@ var jwtSecret = []byte("hfbpw")
 type Claims struct {
 	ID        uint   `json:"id"`
 	UserName  string `json:"username"`  // 注意区分：UserName ❌
-	Authoriey int    `json:"authoriey"` // 权限
+	Authority int    `json:"authority"` // 权限
 	jwt.StandardClaims
 }
 
@@ -22,7 +22,7 @@ func GenerateToken(id uint, username string, authority int) (string, error) {
 	claims := Claims{
 		ID:        id,
 		UserName:  username,
-		Authoriey: authority,
+		Authority: authority,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
 			Issuer:    "x",

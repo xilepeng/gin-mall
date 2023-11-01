@@ -6,6 +6,8 @@ import (
 
 	"github.com/go-redis/redis"
 	"gopkg.in/ini.v1"
+
+	logging "github.com/sirupsen/logrus"
 )
 
 var (
@@ -42,6 +44,7 @@ func Redis() {
 	})
 	_, err := client.Ping().Result()
 	if err != nil {
+		logging.Info(err)
 		panic(err)
 	}
 	RedisClient = client

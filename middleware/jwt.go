@@ -38,9 +38,6 @@ func JWT() gin.HandlerFunc {
 	}
 }
 
-/*
-
-
 // JWTAdmin token验证中间件
 func JWTAdmin() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -71,6 +68,3 @@ func JWTAdmin() gin.HandlerFunc {
 		c.Next()
 	}
 }
-
-
-*/

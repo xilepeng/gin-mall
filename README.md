@@ -3,7 +3,7 @@
 
 V2版本，结构较比V1版本有很大的改动 全部转化成 controller、dao、service 模式，更加符合企业开发
 
-
+由于整合上传oss和上传到本地，需要在 conf 中进行配置 UploadModel 字段，上传到 oss 则配置 oss，上传本地则配置 local
 
 
 # gin-mall
