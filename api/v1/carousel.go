@@ -7,6 +7,7 @@ import (
 	"github.com/xilepeng/gin-mall/service"
 )
 
+// ListCarousel 轮播图
 func ListCarousel(c *gin.Context) {
 	var listCarousel service.CarouselService
 	if err := c.ShouldBind(&listCarousel); err == nil {

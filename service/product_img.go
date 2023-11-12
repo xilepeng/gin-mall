@@ -4,7 +4,7 @@ import (
 	"context"
 	"strconv"
 
-	"github.com/xilepeng/gin-mall/dao"
+	"github.com/xilepeng/gin-mall/repository/db/dao"
 	"github.com/xilepeng/gin-mall/serializer"
 )
 

@@ -4,10 +4,10 @@ import (
 	"context"
 	"strconv"
 
-	"github.com/xilepeng/gin-mall/dao"
-	"github.com/xilepeng/gin-mall/model"
 	"github.com/xilepeng/gin-mall/pkg/e"
 	util "github.com/xilepeng/gin-mall/pkg/utils"
+	"github.com/xilepeng/gin-mall/repository/db/dao"
+	"github.com/xilepeng/gin-mall/repository/db/model"
 	"github.com/xilepeng/gin-mall/serializer"
 )
 

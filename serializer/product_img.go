@@ -2,7 +2,7 @@ package serializer
 
 import (
 	"github.com/xilepeng/gin-mall/conf"
-	"github.com/xilepeng/gin-mall/model"
+	"github.com/xilepeng/gin-mall/repository/db/model"
 )
 
 type ProductImg struct {

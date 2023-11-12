@@ -6,10 +6,11 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/xilepeng/gin-mall/dao"
-	"github.com/xilepeng/gin-mall/model"
+	logging "github.com/sirupsen/logrus"
 	"github.com/xilepeng/gin-mall/pkg/e"
 	util "github.com/xilepeng/gin-mall/pkg/utils"
+	"github.com/xilepeng/gin-mall/repository/db/dao"
+	"github.com/xilepeng/gin-mall/repository/db/model"
 	"github.com/xilepeng/gin-mall/serializer"
 )
 
@@ -37,7 +38,7 @@ func (service *ProductService) Create(ctx context.Context, uId uint, files []*mu
 	boss, _ = userDao.GetUserById(uId)
 	// 以第1张作为封面图
 	tmp, _ := files[0].Open()
-	path, err := UploadProductToLocalStatic(tmp, uId, service.Name)
+	path, err := util.UploadProductToLocalStatic(tmp, uId, service.Name)
 	if err != nil {
 		code = e.ErrorNotExistProduct
 		util.LogrusObj.Infoln(err)
@@ -78,7 +79,7 @@ func (service *ProductService) Create(ctx context.Context, uId uint, files []*mu
 		num := strconv.Itoa(index)
 		productImgDao := dao.NewProductImgDaoByDB(productDao.DB)
 		tmp, _ = file.Open()
-		path, err = UploadProductToLocalStatic(tmp, uId, service.Name+num)
+		path, err = util.UploadProductToLocalStatic(tmp, uId, service.Name+num)
 		if err != nil {
 			code = e.ErrorNotExistProduct
 			return serializer.Response{
@@ -186,5 +187,32 @@ func (service *ProductService) Show(ctx context.Context, id string) serializer.R
 		Status: code,
 		Msg:    e.GetMsg(code),
 		Data:   serializer.BuildProduct(product),
+	}
+}
+
+// Update 更新商品
+func (service *ProductService) Update(ctx context.Context, pId string) serializer.Response {
+	return serializer.Response{}
+}
+
+// Delete 删除商品
+func (service *ProductService) Delete(ctx context.Context, pId string) serializer.Response {
+	code := e.SUCCESS
+
+	productDao := dao.NewProductDao(ctx)
+	productId, _ := strconv.Atoi(pId)
+	err := productDao.DeleteProduct(uint(productId))
+	if err != nil {
+		logging.Info(err)
+		code = e.ErrorDatabase
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+			Error:  err.Error(),
+		}
+	}
+	return serializer.Response{
+		Status: code,
+		Msg:    e.GetMsg(code),
 	}
 }

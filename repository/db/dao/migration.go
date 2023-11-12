@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/xilepeng/gin-mall/model"
+	"github.com/xilepeng/gin-mall/repository/db/model"
 )
 
 // 执行数据迁移

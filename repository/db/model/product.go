@@ -3,7 +3,7 @@ package model
 import (
 	"strconv"
 
-	"github.com/xilepeng/gin-mall/cache"
+	"github.com/xilepeng/gin-mall/repository/cache"
 	"gorm.io/gorm"
 )
 

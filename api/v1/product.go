@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xilepeng/gin-mall/consts"
 	util "github.com/xilepeng/gin-mall/pkg/utils"
 	"github.com/xilepeng/gin-mall/service"
 )
@@ -23,15 +24,29 @@ func CreateProduct(c *gin.Context) {
 	}
 }
 
-// ListProduct 获取商品列表
-func ListProduct(c *gin.Context) {
-	listProductService := service.ProductService{}
-	if err := c.ShouldBind(&listProductService); err == nil {
-		res := listProductService.List(c.Request.Context())
-		c.JSON(http.StatusOK, res)
+// ShowProduct 商品详情
+func ShowProduct(c *gin.Context) {
+	showProductService := service.ProductService{}
+	res := showProductService.Show(c.Request.Context(), c.Param("id"))
+	c.JSON(http.StatusOK, res)
+}
+
+// 删除商品
+func DeleteProduct(c *gin.Context) {
+	DeleteProductService := service.ProductService{}
+	res := DeleteProductService.Delete(c.Request.Context(), c.Param("id"))
+	c.JSON(consts.StatusOK, res)
+}
+
+// 更新商品
+func UpdateProduct(c *gin.Context) {
+	updateProductService := service.ProductService{}
+	if err := c.ShouldBind(&updateProductService); err == nil {
+		res := updateProductService.Update(c, c.Param("id"))
+		c.JSON(consts.StatusOK, res)
 	} else {
-		c.JSON(http.StatusBadRequest, ErrorResponse(err))
-		util.LogrusObj.Infoln(err)
+		c.JSON(consts.IlleageRequest, ErrorResponse(err))
+		util.LogrusObj.Info(err)
 	}
 }
 
@@ -47,11 +62,11 @@ func SearchProduct(c *gin.Context) {
 	}
 }
 
-// ShowProduct 获取商品展示信息
-func ShowProduct(c *gin.Context) {
-	showProductService := service.ProductService{}
-	if err := c.ShouldBind(&showProductService); err == nil {
-		res := showProductService.Show(c.Request.Context(), c.Param("id"))
+// ListProduct 商品列表
+func ListProduct(c *gin.Context) {
+	listProductService := service.ProductService{}
+	if err := c.ShouldBind(&listProductService); err == nil {
+		res := listProductService.List(c.Request.Context())
 		c.JSON(http.StatusOK, res)
 	} else {
 		c.JSON(http.StatusBadRequest, ErrorResponse(err))

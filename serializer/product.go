@@ -2,7 +2,7 @@ package serializer
 
 import (
 	"github.com/xilepeng/gin-mall/conf"
-	"github.com/xilepeng/gin-mall/model"
+	"github.com/xilepeng/gin-mall/repository/db/model"
 )
 
 // 将数据序列化为 json 的函数，便于返回给前端

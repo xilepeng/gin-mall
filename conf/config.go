@@ -5,23 +5,30 @@ import (
 	"strings"
 
 	logging "github.com/sirupsen/logrus"
-	"github.com/xilepeng/gin-mall/dao"
+	"github.com/xilepeng/gin-mall/repository/db/dao"
 	"gopkg.in/ini.v1"
 )
 
 var (
-	AppMode  string
-	HttpPort string
+	AppMode    string
+	HttpPort   string
+	UploadMode string
 
-	Db     string
-	DbHost string
-	DbPort string
-	DbUser string
+	Db         string
+	DbHost     string
+	DbPort     string
+	DbUser     string
+	DbPassword string
+	DbName     string
+
 	// DbPassword != DbPassWord 导致
 	// [error] failed to initialize database, got error Error 1045:
 	// Access denied for user 'root'@'172.17.0.1' (using password: NO)
-	DbPassword string
-	DbName     string
+
+	RedisDb     string
+	RedisAddr   string
+	RedisPw     string
+	RedisDbName string
 
 	AccessKey   string
 	SerectKey   string
@@ -40,6 +47,12 @@ var (
 	Host        string
 	ProductPath string
 	AvatarPath  string
+
+	RabbitMQ         string
+	RabbitMQUser     string
+	RabbitMQPassWord string
+	RabbitMQHost     string
+	RabbitMQPort     string
 )
 
 func Init() {
@@ -54,6 +67,8 @@ func Init() {
 	LoadEmail(file)
 	LoadEs(file)
 	LoadPhotoPath(file)
+	LoadRabbitMQ(file)
+	LoadRedisData(file)
 
 	if err := LoadLocales("conf/locales/zh-cn.yaml"); err != nil {
 		logging.Info(err) //日志内容
@@ -74,6 +89,7 @@ func Init() {
 func LoadServer(file *ini.File) {
 	AppMode = file.Section("service").Key("AppMode").String()
 	HttpPort = file.Section("service").Key("HttpPort").String()
+	UploadMode = file.Section("service").Key("UploadMode").String()
 }
 
 func LoadMysqlData(file *ini.File) {
@@ -109,4 +125,19 @@ func LoadPhotoPath(file *ini.File) {
 	Host = file.Section("path").Key("Host").String()
 	ProductPath = file.Section("path").Key("ProductPath").String()
 	AvatarPath = file.Section("path").Key("AvatarPath").String()
+}
+
+func LoadRabbitMQ(file *ini.File) {
+	RabbitMQ = file.Section("rabbitmq").Key("RabbitMQ").String()
+	RabbitMQUser = file.Section("rabbitmq").Key("RabbitMQUser").String()
+	RabbitMQPassWord = file.Section("rabbitmq").Key("RabbitMQPassWord").String()
+	RabbitMQHost = file.Section("rabbitmq").Key("RabbitMQHost").String()
+	RabbitMQPort = file.Section("rabbitmq").Key("RabbitMQPort").String()
+}
+
+func LoadRedisData(file *ini.File) {
+	RedisDb = file.Section("redis").Key("RedisDb").String()
+	RedisAddr = file.Section("redis").Key("RedisAddr").String()
+	RedisPw = file.Section("redis").Key("RedisPw").String()
+	RedisDbName = file.Section("redis").Key("RedisDbName").String()
 }

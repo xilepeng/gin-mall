@@ -7,11 +7,13 @@ import (
 	"strings"
 	"time"
 
+	logging "github.com/sirupsen/logrus"
 	"github.com/xilepeng/gin-mall/conf"
-	"github.com/xilepeng/gin-mall/dao"
-	"github.com/xilepeng/gin-mall/model"
+	"github.com/xilepeng/gin-mall/consts"
 	"github.com/xilepeng/gin-mall/pkg/e"
 	util "github.com/xilepeng/gin-mall/pkg/utils"
+	"github.com/xilepeng/gin-mall/repository/db/dao"
+	"github.com/xilepeng/gin-mall/repository/db/model"
 	"github.com/xilepeng/gin-mall/serializer"
 	"gopkg.in/mail.v2"
 )
@@ -34,14 +36,14 @@ type ValidEmailService struct {
 
 // Register 注册
 func (service *UserService) Register(ctx context.Context) serializer.Response {
-	var user model.User
+	var user *model.User
 	code := e.SUCCESS
 	if service.Key == "" || len(service.Key) != 16 {
 		code = e.ERROR
 		return serializer.Response{
 			Status: code,
-			Data:   e.GetMsg(code),
-			Msg:    "秘钥长度不足",
+			Msg:    e.GetMsg(code),
+			Data:   "秘钥长度不足",
 		}
 	}
 	// 1000 --->密文存储 对称加密操作
@@ -49,7 +51,7 @@ func (service *UserService) Register(ctx context.Context) serializer.Response {
 	userDao := dao.NewUserDao(ctx)
 	_, exiest, err := userDao.ExistOrNotByUserName(service.UserName)
 	if err != nil {
-		code = e.ERROR
+		code = e.ErrorDatabase
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -62,15 +64,16 @@ func (service *UserService) Register(ctx context.Context) serializer.Response {
 			Msg:    e.GetMsg(code),
 		}
 	}
-	user = model.User{
+	user = &model.User{
 		UserName: service.UserName,
-		NiceName: service.NickName,
+		NickName: service.NickName,
 		Status:   model.Active,
 		Avatar:   "avatar.jpeg",
-		Money:    util.Encrypt.AesEncoding("999999"), // 初始金额加密
+		Money:    util.Encrypt.AesEncoding("999999"), // 加密初始金额
 	}
-	// 密码加密
+	// 加密密码
 	if err = user.SetPassword(service.Password); err != nil {
+		logging.Info(err)
 		code = e.ErrorFailEncryption
 		return serializer.Response{
 			Status: code,
@@ -78,10 +81,20 @@ func (service *UserService) Register(ctx context.Context) serializer.Response {
 		}
 	}
 
+	if conf.UploadMode == consts.UploadModeOss {
+		user.Avatar = "http://q1.qlogo.cn/g?b=qq&nk=294350394&s=640"
+	} else { // conf.UploadMode == consts.UploadModeLocal
+		user.Avatar = "avatar.jpeg"
+	}
 	// 创建用户
-	err = userDao.CreateUser(&user)
+	err = userDao.CreateUser(user)
 	if err != nil {
-		code = e.ERROR
+		logging.Info(err)
+		code = e.ErrorDatabase
+		return serializer.Response{
+			Status: code,
+			Msg:    e.GetMsg(code),
+		}
 	}
 	return serializer.Response{
 		Status: code,
@@ -98,8 +111,9 @@ func (service *UserService) Login(ctx context.Context) serializer.Response {
 	// 判断用户存不存在
 	user, exist, err := userDao.ExistOrNotByUserName(service.UserName)
 	//  存在 exist == true
-	if !exist || err != nil { // ❌ if exist || err == nil
-		code = e.ErrorNotExistUser
+	if !exist {
+		logging.Info(err)
+		code = e.ErrorUserNotFound
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -118,7 +132,7 @@ func (service *UserService) Login(ctx context.Context) serializer.Response {
 	// token 签发
 	token, err := util.GenerateToken(user.ID, service.UserName, 0)
 	if err != nil {
-		code = e.ErrorAuthCheckTokenFail
+		code = e.ErrorAuthToken
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -133,20 +147,19 @@ func (service *UserService) Login(ctx context.Context) serializer.Response {
 
 }
 
-// Update 用户修改信息
-// postman 测试：
-// 环境变量：登录后获取 token, 将 token 添加到环境变量
+// postman 测试：环境变量：登录后获取 token, 将 token 添加到环境变量
 // Headers 中添加  Key: authorization  Value:{{token}}
+// Update 用户修改昵称信息
 func (service *UserService) Update(ctx context.Context, uId uint) serializer.Response {
 	var user *model.User
 	var err error
 	code := e.SUCCESS
 
-	// 找到这个用户
-	userDao := dao.NewUserDao(ctx)
-	user, err = userDao.GetUserById(uId)
+	userDao := dao.NewUserDao(ctx)       // 创建用户对象
+	user, err = userDao.GetUserById(uId) // 通过用户ID 找到这个用户
 	if err != nil {
-		code = e.ERROR
+		logging.Info(err)
+		code = e.ErrorDatabase
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -156,11 +169,12 @@ func (service *UserService) Update(ctx context.Context, uId uint) serializer.Res
 
 	// 修改昵称 nickname
 	if service.NickName != "" {
-		user.NiceName = service.NickName
+		user.NickName = service.NickName
 	}
 	err = userDao.UpdateUserById(uId, user)
 	if err != nil {
-		code = e.ERROR
+		logging.Info(err)
+		code = e.ErrorDatabase
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
@@ -174,24 +188,30 @@ func (service *UserService) Update(ctx context.Context, uId uint) serializer.Res
 	}
 }
 
-// Post 用户上传头像（头像更新到本地）
+// Post 用户上传头像（头像更新到本地/七牛云）
 func (service *UserService) Post(ctx context.Context, uId uint, file multipart.File, fileSize int64) serializer.Response {
 	code := e.SUCCESS
 	var user *model.User
 	var err error
+
 	userDao := dao.NewUserDao(ctx)
 	user, err = userDao.GetUserById(uId)
 	if err != nil {
-		code = e.ERROR
+		logging.Info(err)
+		code = e.ErrorDatabase
 		return serializer.Response{
 			Status: code,
 			Msg:    e.GetMsg(code),
 			Error:  err.Error(),
 		}
 	}
+	var path string
+	if conf.UploadMode == consts.UploadModeLocal {
+		path, err = util.UploadAvatarToLocalStatic(file, uId, user.UserName) // 保存图片到本地
+	} else {
+		path, err = util.UploadAvatarToQiNiu(file, fileSize) // 保存到七牛云
+	}
 
-	// 保存图片到本地
-	path, err := UploadAvatarToLocalStatic(file, uId, user.UserName)
 	if err != nil {
 		code = e.ErrorUploadFile
 		return serializer.Response{
@@ -216,6 +236,11 @@ func (service *UserService) Post(ctx context.Context, uId uint, file multipart.F
 		Data:   serializer.BuildUser(user),
 	}
 }
+
+// 在 notice 表插入
+// 您正在绑定邮箱Email
+// 您正在解绑邮箱Email
+// 您正在修改邮箱密码Email
 
 // SendEmailService 发送邮件服务
 func (service *SendEmailService) Send(ctx context.Context, uId uint) serializer.Response {

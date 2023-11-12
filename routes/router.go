@@ -23,11 +23,13 @@ func NewRouter() *gin.Engine {
 		v1.POST("user/login", api.UserLogin)
 
 		// 商品操作
-		v1.GET("carousels", api.ListCarousel)   // 轮播图
 		v1.GET("products", api.ListProduct)     // 获取商品列表
 		v1.GET("products/:id", api.ShowProduct) // 获取商品展示信息
-		v1.GET("imgs/:id", api.ListProductImg)  // 获取商品图片
-		v1.GET("categories", api.ListCategory)  // 商品分类
+		v1.POST("products", api.SearchProduct)  // 搜索商品
+
+		v1.GET("carousels", api.ListCarousel)  // 轮播图
+		v1.GET("imgs/:id", api.ListProductImg) // 获取商品图片
+		v1.GET("categories", api.ListCategory) // 商品分类
 
 		// 需要登录保护
 		authed := v1.Group("/")
@@ -35,17 +37,17 @@ func NewRouter() *gin.Engine {
 		{
 			// 用户操作
 			authed.PUT("user/update", api.UserUpdate)
-			authed.POST("user/updateAvatar", api.UpdateAvatar)
+			authed.POST("avatar", api.UpdateAvatar)          // 更新用户头像
 			authed.POST("user/sending-email", api.SendEmail) // 绑定邮箱
 			authed.POST("user/valid-email", api.ValidEmail)  // 验证邮箱
-			authed.GET("money", api.ShowMoney)               // 显示余额
 
 			// 商品操作
-			authed.POST("product", api.CreateProduct)        // 创建商品
-			authed.POST("search_product", api.SearchProduct) // 搜索商品
+			authed.POST("product", api.CreateProduct)       // 创建商品
+			authed.PUT("product/:id", api.UpdateProduct)    // 更新商品
+			authed.DELETE("product/:id", api.DeleteProduct) // 删除商品
 
 			// 收藏夹操作
-			authed.GET("favorites", api.ListFavorite)          // 展示收藏夹
+			authed.GET("favorites", api.ShowFavorites)         // 展示收藏夹
 			authed.POST("favorites", api.CreateFavorite)       // 创建收藏夹
 			authed.DELETE("favorites/:id", api.DeleteFavorite) // 删除收藏夹
 
@@ -65,11 +67,15 @@ func NewRouter() *gin.Engine {
 			// 订单操作
 			authed.POST("orders", api.CreateOrder)       // 创建订单
 			authed.GET("orders", api.ListOrder)          // 获取订单
-			authed.GET("orders/:id", api.ShowOrder)      // 修改订单
+			authed.GET("orders/:id", api.ShowOrder)      // 获取订单详情
 			authed.DELETE("orders/:id", api.DeleteOrder) // 删除订单
 
-			// 支付操作
+			// 支付功能
 			authed.POST("paydown", api.OrderPay)
+
+			// 显示余额
+			authed.GET("money", api.ShowMoney)
+
 		}
 	}
 	return r

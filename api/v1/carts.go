@@ -47,7 +47,7 @@ func UpdateCart(c *gin.Context) {
 	}
 }
 
-// ListCart 展示购物车信息
+// ListCart 购物车详细信息
 func ListCart(c *gin.Context) {
 	claim, _ := util.ParseToken(c.GetHeader("Authorization"))
 	listCartService := service.CartService{}

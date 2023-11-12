@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/xilepeng/gin-mall/conf"
-	"github.com/xilepeng/gin-mall/dao"
-	"github.com/xilepeng/gin-mall/model"
+	"github.com/xilepeng/gin-mall/repository/db/dao"
+	"github.com/xilepeng/gin-mall/repository/db/model"
 )
 
 type Favorite struct {

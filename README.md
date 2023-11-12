@@ -1,4 +1,6 @@
 
+
+
 ## V2版本更新说明
 
 V2版本，结构较比V1版本有很大的改动 全部转化成 controller、dao、service 模式，更加符合企业开发
@@ -28,13 +30,13 @@ Status: Image is up to date for mysql:latest
 docker.io/library/mysql:latest
 
 
-➜  ~ docker run -itd --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=密码 mysql
+➜  ~ docker run -itd --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=0000 mysql
 8d227cb57844817048571ee06efe21bc206c9399ddddc1ac741be0026f38603c
 
 
 ➜  ~ docker ps
 CONTAINER ID   IMAGE                  COMMAND                  CREATED          STATUS          PORTS                               NAMES
-8d227cb57844   mysql                  "docker-entrypoint.s…"   45 seconds ago   Up 42 seconds   0.0.0.0:3306->3306/tcp, 33060/tcp   mysql
+8d227cb57844    mysql                  "docker-entrypoint.s…"   45 seconds ago   Up 42 seconds   0.0.0.0:3306->3306/tcp, 33060/tcp   mysql
 
 
 
@@ -44,7 +46,7 @@ CONTAINER ID   IMAGE                  COMMAND                  CREATED          
 
 
 ➜  ~ docker exec -it mysql bash
-root@8e6ae0287092:/# mysql -uroot -p
+root@8d227cb57844 :/# mysql -uroot -p
 Enter password:
 
 Welcome to the MySQL monitor.  Commands end with ; or \g.
@@ -69,6 +71,15 @@ ALTER USER 'root'@'%' IDENTIFIED BY '密码' PASSWORD EXPIRE NEVER;
 ALTER USER 'root'@'localhost' IDENTIFIED BY '密码';
 
 ```
+
+创建数据库
+``` shell
+CREATE DATABASE mall_db CHARSET = utf8mb4;
+
+
+CREATE DATABASE mall_db_test DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+```
+
 
 
 ```shell 
@@ -124,3 +135,66 @@ mysql> select * from user;
 +----+---------------------+---------------------+------------+-----------+-------+--------------------------------------------------------------+-----------+--------+-----------------------------------------------------+--------------------------+
 5 rows in set (0.01 sec)
 ```
+
+
+
+
+``` shell 
+
+➜  ~ docker pull redis
+
+➜  ~ docker run -itd --name redis -p 6379:6379 redis
+
+➜  ~ docker exec -it redis /bin/bash
+
+root@03ac20e1c401:/data# redis-cli
+127.0.0.1:6379>
+
+```
+
+``` shell
+docker run -itd --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq
+
+docker ps -a
+
+docker exec -it 8cdd13decca7 /bin/bash
+
+
+rabbitmq-plugins enable rabbitmq_management
+
+
+```
+
+
+
+``` shell 
+ ~  docker run -itd --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq
+9a1bc8fbf4c3b80bf5cc5f9f0e385ff45d55ce3adac4dc5c699fb0809a168fb6
+ ~  docker ps -a
+CONTAINER ID   IMAGE      COMMAND                   CREATED         STATUS         PORTS                                                                                              NAMES
+9a1bc8fbf4c3   rabbitmq   "docker-entrypoint.s…"   6 seconds ago   Up 5 seconds   4369/tcp, 0.0.0.0:5672->5672/tcp, 5671/tcp, 15691-15692/tcp, 25672/tcp, 0.0.0.0:15672->15672/tcp   rabbitmq
+
+
+ ~  docker exec -it 9a1bc8fbf4c3 /bin/bash
+root@9a1bc8fbf4c3:/# rabbitmq-plugins enable rabbitmq_management
+
+
+Enabling plugins on node rabbit@9a1bc8fbf4c3:
+rabbitmq_management
+The following plugins have been configured:
+  rabbitmq_management
+  rabbitmq_management_agent
+  rabbitmq_prometheus
+  rabbitmq_web_dispatch
+Applying plugin configuration to rabbit@9a1bc8fbf4c3...
+The following plugins have been enabled:
+  rabbitmq_management
+
+started 1 plugins.
+root@9a1bc8fbf4c3:/#
+
+```
+
+
+
+[Running the Elastic Stack ("ELK") on Docker](https://www.elastic.co/guide/en/elastic-stack-get-started/8.2/get-started-stack-docker.html)

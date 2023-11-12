@@ -8,7 +8,7 @@ import (
 	"github.com/xilepeng/gin-mall/service"
 )
 
-// CreateAddress 新建收藏
+// CreateAddress 新增收货地址
 func CreateAddress(c *gin.Context) {
 	claim, _ := util.ParseToken(c.GetHeader("Authorization"))
 	createAddresssService := service.AddressService{}
@@ -21,7 +21,7 @@ func CreateAddress(c *gin.Context) {
 	}
 }
 
-// ShowAddress 获取商品展示信息
+// GetAddress 展示某个收货地址
 func GetAddress(c *gin.Context) {
 	showAddressService := service.AddressService{}
 	if err := c.ShouldBind(&showAddressService); err == nil {
@@ -33,7 +33,7 @@ func GetAddress(c *gin.Context) {
 	}
 }
 
-// ListAddress 获取收藏列表
+// ListAddress 展示收货地址
 func ListAddress(c *gin.Context) {
 	listAddressService := service.AddressService{}
 	claim, _ := util.ParseToken(c.GetHeader("Authorization"))
@@ -46,7 +46,7 @@ func ListAddress(c *gin.Context) {
 	}
 }
 
-// UpdateAddress 新建收藏
+// UpdateAddress 修改收货地址
 func UpdateAddress(c *gin.Context) {
 	claim, _ := util.ParseToken(c.GetHeader("Authorization"))
 	updateAddresssService := service.AddressService{}
@@ -59,7 +59,7 @@ func UpdateAddress(c *gin.Context) {
 	}
 }
 
-// DeleteAddress 删除收藏夹
+// DeleteAddress 删除收获地址
 func DeleteAddress(c *gin.Context) {
 	deleteAddressService := service.AddressService{}
 	claim, _ := util.ParseToken(c.GetHeader("Authorization"))

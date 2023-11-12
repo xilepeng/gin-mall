@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 
-	"github.com/xilepeng/gin-mall/dao"
 	"github.com/xilepeng/gin-mall/pkg/e"
 	util "github.com/xilepeng/gin-mall/pkg/utils"
+	"github.com/xilepeng/gin-mall/repository/db/dao"
 	"github.com/xilepeng/gin-mall/serializer"
 )
 

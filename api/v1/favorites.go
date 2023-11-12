@@ -21,8 +21,8 @@ func CreateFavorite(c *gin.Context) {
 	}
 }
 
-// ListFavorite 获取收藏列表
-func ListFavorite(c *gin.Context) {
+// 收藏夹详情接口
+func ShowFavorites(c *gin.Context) {
 	listFavoriteService := service.FavoriteService{}
 	claim, _ := util.ParseToken(c.GetHeader("Authorization"))
 	if err := c.ShouldBind(&listFavoriteService); err == nil {

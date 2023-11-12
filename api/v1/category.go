@@ -7,6 +7,7 @@ import (
 	"github.com/xilepeng/gin-mall/service"
 )
 
+// ListCategory 商品分类
 func ListCategory(c *gin.Context) {
 	var ListCategory service.CategoryService
 	if err := c.ShouldBind(&ListCategory); err == nil {

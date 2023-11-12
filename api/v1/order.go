@@ -8,7 +8,7 @@ import (
 	"github.com/xilepeng/gin-mall/service"
 )
 
-// CreateOrder 新建收藏
+// CreateOrder 新建订单
 func CreateOrder(c *gin.Context) {
 	claim, _ := util.ParseToken(c.GetHeader("Authorization"))
 	createOrderService := service.OrderService{}
@@ -21,7 +21,7 @@ func CreateOrder(c *gin.Context) {
 	}
 }
 
-// DeleteOrder 删除收藏夹
+// DeleteOrder 删除订单
 func DeleteOrder(c *gin.Context) {
 	deleteOrderService := service.OrderService{}
 	claim, _ := util.ParseToken(c.GetHeader("Authorization"))
@@ -34,7 +34,7 @@ func DeleteOrder(c *gin.Context) {
 	}
 }
 
-// ShowOrder 新建收藏
+// ShowOrder 获取订单详情
 func ShowOrder(c *gin.Context) {
 	claim, _ := util.ParseToken(c.GetHeader("Authorization"))
 	showOrdersService := service.OrderService{}
@@ -47,7 +47,7 @@ func ShowOrder(c *gin.Context) {
 	}
 }
 
-// ListOrder 获取商品展示信息
+// ListOrder 获取订单
 func ListOrder(c *gin.Context) {
 	claim, _ := util.ParseToken(c.GetHeader("Authorization"))
 	listOrderService := service.OrderService{}

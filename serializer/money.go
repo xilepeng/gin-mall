@@ -1,8 +1,8 @@
 package serializer
 
 import (
-	"github.com/xilepeng/gin-mall/model"
 	util "github.com/xilepeng/gin-mall/pkg/utils"
+	"github.com/xilepeng/gin-mall/repository/db/model"
 )
 
 type Money struct {

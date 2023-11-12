@@ -2,7 +2,7 @@ package serializer
 
 import (
 	"github.com/xilepeng/gin-mall/conf"
-	"github.com/xilepeng/gin-mall/model"
+	"github.com/xilepeng/gin-mall/repository/db/model"
 )
 
 type User struct {
@@ -20,7 +20,7 @@ func BuildUser(user *model.User) *User {
 	return &User{
 		ID:       user.ID,
 		UserName: user.UserName,
-		NickName: user.NiceName,
+		NickName: user.NickName,
 		Email:    user.Email,
 		Status:   user.Status,
 		Avatar:   conf.Host + conf.HttpPort + conf.AvatarPath + user.Avatar,

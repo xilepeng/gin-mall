@@ -3,7 +3,7 @@ package dao
 import (
 	"context"
 
-	"github.com/xilepeng/gin-mall/model"
+	"github.com/xilepeng/gin-mall/repository/db/model"
 	"gorm.io/gorm"
 )
 
@@ -35,8 +35,9 @@ func (dao *UserDao) CreateUser(user *model.User) error {
 }
 
 // GetUserById 根据 id 获取 user
-func (dao *UserDao) GetUserById(id uint) (user *model.User, err error) {
-	err = dao.DB.Model(&model.User{}).Where("id=?", id).First(&user).Error
+func (dao *UserDao) GetUserById(uId uint) (user *model.User, err error) {
+	err = dao.DB.Model(&model.User{}).Where("id=?", uId).
+		First(&user).Error
 	return
 }
 
