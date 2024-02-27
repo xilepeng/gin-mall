@@ -41,8 +41,6 @@ CONTAINER ID   IMAGE                  COMMAND                  CREATED          
 
 
 
-
-
 ➜  ~ docker exec -it mysql bash
 root@8e6ae0287092:/# mysql -uroot -p
 Enter password:
