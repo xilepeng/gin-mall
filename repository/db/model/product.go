@@ -12,7 +12,7 @@ import (
 type Product struct {
 	gorm.Model
 	Name          string
-	CategoryId    uint
+	CategoryID    uint
 	Title         string
 	Info          string
 	ImgPath       string
@@ -20,7 +20,7 @@ type Product struct {
 	DiscountPrice string // 折后价
 	OnSale        bool   `gorm:"default:false"`
 	Num           int
-	BossId        uint
+	BossID        uint
 	BossName      string
 	BossAvatar    string
 }

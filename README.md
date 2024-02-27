@@ -30,7 +30,7 @@ Status: Image is up to date for mysql:latest
 docker.io/library/mysql:latest
 
 
-➜  ~ docker run -itd --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=0000 mysql
+➜  ~ docker run -itd --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=Yizhili80 mysql
 8d227cb57844817048571ee06efe21bc206c9399ddddc1ac741be0026f38603c
 
 

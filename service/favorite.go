@@ -80,11 +80,11 @@ func (service *FavoriteService) Create(ctx context.Context, uId uint) serializer
 
 	favorite := &model.Favorite{
 		User:      *user,
-		UserId:    uId,
+		UserID:    uId,
 		Product:   *product,
-		ProductId: service.ProductId,
+		ProductID: service.ProductId,
 		Boss:      *boss,
-		BossId:    service.BossId,
+		BossID:    service.BossId,
 	}
 
 	err = favoriteDao.CreateFavorite(favorite)

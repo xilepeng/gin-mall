@@ -8,9 +8,9 @@ import (
 // 将数据序列化为 json 的函数，便于返回给前端
 
 type Product struct {
-	Id            uint   `json:"id"`
+	ID            uint   `json:"id"`
 	Name          string `json:"name"`
-	CategoryId    uint   `json:"category_id"` // 分类
+	CategoryID    uint   `json:"category_id"` // 分类
 	Title         string `json:"title"`
 	Info          string `json:"info"`
 	ImgPath       string `json:"img_path"`
@@ -20,16 +20,16 @@ type Product struct {
 	CreateAt      int64  `json:"create_at"`
 	Num           int    `json:"num"`
 	OnSale        bool   `json:"on_sale"`
-	BossId        uint   `json:"boss_id"`
+	BossID        uint   `json:"boss_id"`
 	BossName      string `json:"boss_name"`
 	BossAvatar    string `json:"boss_avatar"`
 }
 
 func BuildProduct(item *model.Product) Product {
 	return Product{
-		Id:            item.ID,
+		ID:            item.ID,
 		Name:          item.Name,
-		CategoryId:    item.CategoryId,
+		CategoryID:    item.CategoryID,
 		Title:         item.Title,
 		Info:          item.Info,
 		ImgPath:       conf.Host + conf.HttpPort + conf.ProductPath + item.ImgPath,
@@ -39,7 +39,7 @@ func BuildProduct(item *model.Product) Product {
 		CreateAt:      item.CreatedAt.Unix(),
 		Num:           item.Num,
 		OnSale:        item.OnSale,
-		BossId:        item.BossId,
+		BossID:        item.BossID,
 		BossName:      item.BossName,
 		BossAvatar:    conf.Host + conf.HttpPort + conf.AvatarPath + item.BossAvatar,
 	}

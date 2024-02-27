@@ -20,7 +20,7 @@ type ProductService struct {
 	Id            uint   `json:"id" form:"id"`
 	Name          string `json:"name" form:"name"`
 	Num           int    `json:"num"`
-	CategoryId    uint   `json:"category_id" form:"category_id"`
+	CategoryID    uint   `json:"category_id" form:"category_id"`
 	Title         string `json:"title" form:"title"`
 	Info          string `json:"info" form:"info"`
 	ImgPath       string `json:"img_path" form:"img_path"`
@@ -50,7 +50,7 @@ func (service *ProductService) Create(ctx context.Context, uId uint, files []*mu
 	}
 	product := &model.Product{
 		Name:          service.Name,
-		CategoryId:    service.CategoryId,
+		CategoryID:    service.CategoryID,
 		Title:         service.Title,
 		Info:          service.Info,
 		ImgPath:       path,
@@ -58,7 +58,7 @@ func (service *ProductService) Create(ctx context.Context, uId uint, files []*mu
 		DiscountPrice: service.DiscountPrice, // 折后价
 		OnSale:        true,
 		Num:           service.Num,
-		BossId:        uId,
+		BossID:        uId,
 		BossName:      boss.UserName,
 		BossAvatar:    boss.Avatar,
 	}
@@ -121,8 +121,8 @@ func (service *ProductService) List(ctx context.Context) serializer.Response {
 		service.PageSize = 15
 	}
 	condition := make(map[string]interface{})
-	if service.CategoryId != 0 {
-		condition["category_id"] = service.CategoryId
+	if service.CategoryID != 0 {
+		condition["category_id"] = service.CategoryID
 	}
 	productDao := dao.NewProductDao(ctx)
 	total, err := productDao.CountProductByCondition(condition)

@@ -15,12 +15,12 @@ import (
 )
 
 type OrderService struct {
-	ProductId uint    `json:"product_id" form:"product_id"`
+	ProductID uint    `json:"product_id" form:"product_id"`
 	Num       int     `json:"num" form:"num"`
-	AddressId uint    `json:"address_id" form:"address_id"`
+	AddressID uint    `json:"address_id" form:"address_id"`
 	Money     float64 `json:"money" form:"money"`
-	BossId    uint    `json:"boss_id" form:"boss_id"`
-	UserId    uint    `json:"user_id" form:"user_id"`
+	BossID    uint    `json:"boss_id" form:"boss_id"`
+	UserID    uint    `json:"user_id" form:"user_id"`
 	OrderNum  uint    `json:"order_num" form:"order_num"`
 	Type      int     `json:"type" form:"type"`
 	model.BasePage
@@ -31,16 +31,16 @@ func (service *OrderService) Create(ctx context.Context, uId uint) serializer.Re
 
 	orderDao := dao.NewOrderDao(ctx)
 	order := &model.Order{
-		UserId:    uId,
-		ProductId: service.ProductId,
-		BossId:    service.BossId,
+		UserID:    uId,
+		ProductID: service.ProductID,
+		BossID:    service.BossID,
 		Num:       service.Num,
 		Money:     service.Money,
 		Type:      1, // 默认未支付订单
 	}
 	// 检验地址是否存在
 	addressDao := dao.NewAddressDao(ctx)
-	address, err := addressDao.GetAddressByAid(service.AddressId)
+	address, err := addressDao.GetAddressByAid(service.AddressID)
 	if err != nil {
 		util.LogrusObj.Infoln("err", err)
 		code = e.ERROR
@@ -50,11 +50,11 @@ func (service *OrderService) Create(ctx context.Context, uId uint) serializer.Re
 			Error:  err.Error(),
 		}
 	}
-	order.AddressId = address.ID
-	// 订单号创建，自动自动生成的随机 number + 唯一标识的 productId + 用户的 id
+	order.AddressID = address.ID
+	// 订单号创建，自动自动生成的随机 number + 唯一标识的 productID + 用户的 id
 	number := fmt.Sprintf("09%v", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(100000000)) // 	"math/rand"
-	productNum := strconv.Itoa(int(service.ProductId))
-	userNum := strconv.Itoa(int(service.UserId))
+	productNum := strconv.Itoa(int(service.ProductID))
+	userNum := strconv.Itoa(int(service.UserID))
 	number = number + productNum + userNum
 	orderNum, _ := strconv.ParseUint(number, 10, 64)
 	order.OrderNum = orderNum
@@ -93,7 +93,7 @@ func (service *OrderService) Show(ctx context.Context, uId uint, oId string) ser
 
 	// 获取地址信息
 	addressDao := dao.NewAddressDao(ctx)
-	address, err := addressDao.GetAddressByAid(service.AddressId)
+	address, err := addressDao.GetAddressByAid(service.AddressID)
 	if err != nil {
 		util.LogrusObj.Infoln("err", err)
 		code = e.ERROR
@@ -105,7 +105,7 @@ func (service *OrderService) Show(ctx context.Context, uId uint, oId string) ser
 	}
 	// 获取商品信息
 	productDao := dao.NewProductDao(ctx)
-	product, err := productDao.GetProductById(service.ProductId)
+	product, err := productDao.GetProductById(service.ProductID)
 	if err != nil {
 		util.LogrusObj.Infoln("err", err)
 		code = e.ERROR

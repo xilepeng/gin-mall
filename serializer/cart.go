@@ -26,8 +26,8 @@ type Cart struct {
 func BuildCart(cart *model.Cart, product *model.Product, boss *model.User) Cart {
 	return Cart{
 		Id:            cart.ID,
-		UserId:        cart.UserId,
-		ProductId:     cart.ProductId,
+		UserId:        cart.UserID,
+		ProductId:     cart.ProductID,
 		CreateAt:      cart.CreatedAt.Unix(),
 		Num:           int(cart.Num),
 		MaxNum:        int(cart.MaxNum),
@@ -44,11 +44,11 @@ func BuildCarts(ctx context.Context, items []*model.Cart) (carts []Cart) {
 	productDao := dao.NewProductDao(ctx)
 	bossDao := dao.NewUserDao(ctx)
 	for _, item := range items {
-		product, err := productDao.GetProductById(item.ProductId)
+		product, err := productDao.GetProductById(item.ProductID)
 		if err != nil {
 			continue
 		}
-		boss, err := bossDao.GetUserById(item.UserId)
+		boss, err := bossDao.GetUserById(item.UserID)
 		if err != nil {
 			continue
 		}

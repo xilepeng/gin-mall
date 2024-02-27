@@ -13,8 +13,8 @@ import (
 
 type CartService struct {
 	Id        uint `json:"id" form:"id"`
-	BossId    uint `json:"boss_id" form:"boss_id"`
-	ProductId uint `json:"product_id" form:"product_id"`
+	BossID    uint `json:"boss_id" form:"boss_id"`
+	ProductID uint `json:"product_id" form:"product_id"`
 	Num       int  `json:"num" form:"num"`
 }
 
@@ -23,7 +23,7 @@ func (service *CartService) Create(ctx context.Context, uId uint) serializer.Res
 	code := e.SUCCESS
 	// 判断有没有这个商品
 	productDao := dao.NewProductDao(ctx)
-	product, err := productDao.GetProductById(service.ProductId)
+	product, err := productDao.GetProductById(service.ProductID)
 	if err != nil {
 		util.LogrusObj.Infoln("err", err)
 		code = e.ERROR
@@ -36,9 +36,9 @@ func (service *CartService) Create(ctx context.Context, uId uint) serializer.Res
 	// 创建购物车
 	cartDao := dao.NewCartDao(ctx)
 	cart = &model.Cart{
-		UserId:    uId,
-		ProductId: service.ProductId,
-		BossId:    service.BossId,
+		UserID:    uId,
+		ProductID: service.ProductID,
+		BossID:    service.BossID,
 		Num:       uint(service.Num),
 	}
 	err = cartDao.CreateCart(cart)
@@ -53,7 +53,7 @@ func (service *CartService) Create(ctx context.Context, uId uint) serializer.Res
 	}
 
 	userDao := dao.NewUserDao(ctx)
-	boss, err := userDao.GetUserById(service.BossId)
+	boss, err := userDao.GetUserById(service.BossID)
 	if err != nil {
 		util.LogrusObj.Infoln("err", err)
 		code = e.ERROR

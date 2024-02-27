@@ -13,7 +13,7 @@ func BuildCarousel(item *model.Carousel) Carousel {
 	return Carousel{
 		Id:        item.ID,
 		ImgPath:   item.ImgPath,
-		ProductId: item.ProductId,
+		ProductId: item.ProductID,
 		CreateAt:  item.CreatedAt.Unix(),
 	}
 }
